@@ -40,7 +40,6 @@ export default function Register() {
       }
     }
     if (result && flag) {
-      console.log(value)
       registerMutation.mutate(_.omit(value, ['confirmPassword']), {
         onSuccess: (data, variables, context) => {
           console.log('data', data)
