@@ -1,11 +1,13 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
 import _ from 'lodash'
+import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import authApi from 'src/apis/auth.api'
 import Input from 'src/components/Input/Input'
+import { AuthContext } from 'src/context/auth.context'
 import schema from 'src/schema/schema'
 import compareValue from 'src/utils/compareValue'
 interface FormInputs {
@@ -15,6 +17,8 @@ interface FormInputs {
 }
 
 export default function Register() {
+  const navigate = useNavigate()
+  const { setUserInfo, setIsAuthenticated } = useContext(AuthContext)
   const {
     register,
     trigger,
@@ -43,7 +47,9 @@ export default function Register() {
     if (result && flag) {
       registerMutation.mutate(_.omit(value, ['confirmPassword']), {
         onSuccess: (data) => {
-          console.log('ok')
+          setIsAuthenticated(true)
+          setUserInfo(data.data.data.user)
+          navigate('/')
         },
         onError: (error: any) => {
           toast.error(error.response.data.data.email)

@@ -1,6 +1,23 @@
+import { useMutation } from '@tanstack/react-query'
+import { useContext } from 'react'
 import { Link } from 'react-router-dom'
+import authApi from 'src/apis/auth.api'
+import { AuthContext } from 'src/context/auth.context'
+import { removeDataLS } from 'src/utils/auth.ls'
 import Popover from '../Popover/Popover'
 export default function Header() {
+  const { userInfo, setIsAuthenticated, setUserInfo } = useContext(AuthContext)
+
+  const logoutMutation = useMutation({
+    mutationFn: authApi.logout,
+    onSuccess: () => {
+      removeDataLS('access_token')
+      removeDataLS('user_info')
+      setIsAuthenticated(false)
+      setUserInfo(null)
+    }
+  })
+
   return (
     <div className='bg-primary py-[10px] text-white'>
       <div className='container'>
@@ -55,7 +72,11 @@ export default function Header() {
                 <Link to='#' className='p-[10px]  hover:bg-slate-100 hover:text-secondary'>
                   Đơn mua
                 </Link>
-                <Link to='#' className='p-[10px]  hover:bg-slate-100 hover:text-secondary'>
+                <Link
+                  to='#'
+                  className='p-[10px]  hover:bg-slate-100 hover:text-secondary'
+                  onClick={() => logoutMutation.mutate()}
+                >
                   Đăng xuất
                 </Link>
               </div>
@@ -67,7 +88,7 @@ export default function Header() {
                 alt='avatar'
                 className='h-[20px] w-[20px] overflow-hidden rounded-full'
               />
-              <p className='ml-1 text-sm '>Truong Thai Bao</p>
+              <p className='ml-1 text-sm '>{userInfo?.email}</p>
             </div>
           </Popover>
         </div>

@@ -1,11 +1,12 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
-import React from 'react'
+import React, { useContext } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import authApi from 'src/apis/auth.api'
 import Input from 'src/components/Input/Input'
+import { AuthContext } from 'src/context/auth.context'
 import schema from 'src/schema/schema'
 interface FormInputs {
   email: string
@@ -13,6 +14,8 @@ interface FormInputs {
 }
 
 export default function Login() {
+  const navigate = useNavigate()
+  const { setUserInfo, setIsAuthenticated } = useContext(AuthContext)
   const {
     register,
     trigger,
@@ -31,7 +34,9 @@ export default function Login() {
     if (result) {
       loginMutation.mutate(value, {
         onSuccess: (data) => {
-          console.log('ok')
+          setIsAuthenticated(true)
+          if (data.data.data) setUserInfo(data.data.data.user)
+          navigate('/')
         },
         onError: (error: any) => {
           toast.error(error.response.data.data.password)
