@@ -3,7 +3,7 @@ import HeaderAuth from 'src/components/HeaderAuth/HeaderAuth'
 
 interface Props {
   children?: React.ReactNode
-  name?: string | undefined
+  name: string | undefined
 }
 
 export default function AuthLayout({ children, name }: Props) {

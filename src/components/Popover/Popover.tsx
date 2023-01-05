@@ -1,5 +1,5 @@
 import { FloatingPortal } from '@floating-ui/react'
-import { useFloating, shift } from '@floating-ui/react-dom'
+import { shift, useFloating } from '@floating-ui/react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import React, { useState } from 'react'
 
@@ -7,17 +7,21 @@ export default function Popover({
   children,
   contentElement,
   origin = '50%',
-  left = 0
+  arrowLeft = '50%',
+  isOptionPlace
 }: {
   children: React.ReactNode
   contentElement: React.ReactNode
   origin?: string
-  left?: number
+  arrowLeft?: string
+  isOptionPlace?: any
 }) {
   const [isShowPopover, setIsShowPopover] = useState(false)
   const { x, y, reference, floating, strategy } = useFloating({
-    middleware: [shift()]
+    middleware: [shift()],
+    placement: isOptionPlace && 'bottom-end'
   })
+
   const handleShowPopover = () => {
     setIsShowPopover(true)
   }
@@ -26,7 +30,7 @@ export default function Popover({
   }
   return (
     <div ref={reference} onMouseEnter={handleShowPopover} onMouseLeave={handleHidePopover}>
-      <div className='relative before:absolute before:bottom-[-10px] before:h-[20px] before:w-full before:bg-transparent'>
+      <div className='relative before:absolute before:bottom-[-20px] before:h-[20px] before:w-full before:bg-transparent'>
         {children}
       </div>
       <FloatingPortal>
@@ -40,8 +44,8 @@ export default function Popover({
               ref={floating}
               style={{
                 position: strategy,
-                top: y ? y : 0,
-                left: x ? x - left : 0,
+                top: y ?? 0,
+                left: x ?? 0,
                 width: 'max-content',
                 transformOrigin: `${origin} top`
               }}
@@ -49,7 +53,14 @@ export default function Popover({
             >
               <>
                 {contentElement}
-                <span className='border-b-900 pointer-events-none absolute left-[50%] top-[-24%] z-10  block translate-x-[-50%] border-[12px] border-white border-x-transparent border-t-transparent'></span>
+                <span
+                  className={
+                    'border-b-900 pointer-events-none absolute left-[50%] top-[-20px] z-10  block translate-x-[-50%] border-[12px] border-white border-x-transparent border-t-transparent'
+                  }
+                  style={{
+                    left: arrowLeft && arrowLeft
+                  }}
+                ></span>
               </>
             </motion.div>
           )}

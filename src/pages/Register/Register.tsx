@@ -1,12 +1,13 @@
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useMutation } from '@tanstack/react-query'
+import _ from 'lodash'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import authApi from 'src/apis/auth.api'
 import Input from 'src/components/Input/Input'
-import { yupResolver } from '@hookform/resolvers/yup'
 import schema from 'src/schema/schema'
 import compareValue from 'src/utils/compareValue'
-import { useMutation } from '@tanstack/react-query'
-import { authRegister } from 'src/apis/auth.api'
-import _ from 'lodash'
 interface FormInputs {
   email: string
   password: string
@@ -24,7 +25,7 @@ export default function Register() {
     resolver: yupResolver(schema)
   })
   const registerMutation = useMutation({
-    mutationFn: (body: Omit<FormInputs, 'confirmPassword'>) => authRegister(body)
+    mutationFn: (body: Omit<FormInputs, 'confirmPassword'>) => authApi.register(body)
   })
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -41,10 +42,11 @@ export default function Register() {
     }
     if (result && flag) {
       registerMutation.mutate(_.omit(value, ['confirmPassword']), {
-        onSuccess: (data, variables, context) => {
-          console.log('data', data)
-          console.log('var', variables)
-          console.log('context', context)
+        onSuccess: (data) => {
+          console.log('ok')
+        },
+        onError: (error: any) => {
+          toast.error(error.response.data.data.email)
         }
       })
     }
