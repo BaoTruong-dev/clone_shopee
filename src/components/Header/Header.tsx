@@ -3,16 +3,14 @@ import { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import authApi from 'src/apis/auth.api'
 import { AuthContext } from 'src/context/auth.context'
-import { removeDataLS } from 'src/utils/auth.ls'
+import { router } from '../constant/router'
 import Popover from '../Popover/Popover'
 export default function Header() {
-  const { userInfo, setIsAuthenticated, setUserInfo } = useContext(AuthContext)
+  const { userInfo, setIsAuthenticated, setUserInfo, isAuthenticated } = useContext(AuthContext)
 
   const logoutMutation = useMutation({
     mutationFn: authApi.logout,
     onSuccess: () => {
-      removeDataLS('access_token')
-      removeDataLS('user_info')
       setIsAuthenticated(false)
       setUserInfo(null)
     }
@@ -63,34 +61,48 @@ export default function Header() {
               </svg>
             </div>
           </Popover>
-          <Popover
-            contentElement={
-              <div className='flex flex-col '>
-                <Link to='/profile' className='p-[10px] hover:bg-slate-100 hover:text-secondary'>
-                  Tài khoản của tôi
-                </Link>
-                <Link to='#' className='p-[10px]  hover:bg-slate-100 hover:text-secondary'>
-                  Đơn mua
-                </Link>
-                <Link
-                  to='#'
-                  className='p-[10px]  hover:bg-slate-100 hover:text-secondary'
-                  onClick={() => logoutMutation.mutate()}
-                >
-                  Đăng xuất
-                </Link>
+          {isAuthenticated ? (
+            <Popover
+              contentElement={
+                <div className='flex flex-col '>
+                  <Link to='/profile' className='p-[10px] hover:bg-slate-100 hover:text-secondary'>
+                    Tài khoản của tôi
+                  </Link>
+                  <Link to='#' className='p-[10px]  hover:bg-slate-100 hover:text-secondary'>
+                    Đơn mua
+                  </Link>
+                  <Link
+                    to='#'
+                    className='p-[10px]  hover:bg-slate-100 hover:text-secondary'
+                    onClick={() => logoutMutation.mutate()}
+                  >
+                    Đăng xuất
+                  </Link>
+                </div>
+              }
+            >
+              <div className='flex items-center duration-200  hover:opacity-75'>
+                <img
+                  src='https://images.unsplash.com/photo-1672394423014-e0354d75b123?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1287&q=80'
+                  alt='avatar'
+                  className='h-[20px] w-[20px] overflow-hidden rounded-full'
+                />
+                <p className='ml-1 text-sm '>{userInfo?.email}</p>
               </div>
-            }
-          >
-            <div className='flex items-center duration-200  hover:opacity-75'>
-              <img
-                src='https://images.unsplash.com/photo-1672394423014-e0354d75b123?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1287&q=80'
-                alt='avatar'
-                className='h-[20px] w-[20px] overflow-hidden rounded-full'
-              />
-              <p className='ml-1 text-sm '>{userInfo?.email}</p>
+            </Popover>
+          ) : (
+            <div className='text-[14px] font-bold'>
+              <Link
+                to={router.register}
+                className='mr-[10px] border-r-[1px] border-r-[rgba(226,226,226,0.5)] pr-[10px]  hover:opacity-75'
+              >
+                Đăng ký
+              </Link>
+              <Link to={router.login} className=' hover:opacity-75'>
+                Đăng nhập
+              </Link>
             </div>
-          </Popover>
+          )}
         </div>
         <div className='mt-[30px] flex items-center justify-between gap-8'>
           <Link to='/'>

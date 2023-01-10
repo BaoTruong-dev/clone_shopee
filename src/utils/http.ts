@@ -1,6 +1,6 @@
-import { getAccessTokenLS } from 'src/utils/auth.ls'
+import { clearDataLS, getAccessTokenLS } from 'src/utils/auth.ls'
 import { saveAccessTokenLS, saveUserInfoLS } from './auth.ls'
-import axios, { AxiosInstance } from 'axios'
+import axios, { AxiosHeaders, AxiosInstance } from 'axios'
 
 class Http {
   instance: AxiosInstance
@@ -17,7 +17,7 @@ class Http {
     this.instance.interceptors.request.use(
       (config) => {
         if (this.accessToken && config.headers) {
-          config.headers.authorization = this.accessToken
+          ;(config.headers as AxiosHeaders).set('authorization', this.accessToken)
           return config
         }
         return config
@@ -33,6 +33,8 @@ class Http {
           this.accessToken = response.data.data.access_token
           saveAccessTokenLS(this.accessToken)
           saveUserInfoLS(response.data.data.user)
+        } else if (response.config.url === 'logout') {
+          clearDataLS()
         }
         return response
       },

@@ -16,6 +16,10 @@ export const getUserInfoLS = () => {
   return result ? JSON.parse(result) : ''
 }
 
+export const clearDataLS = () => {
+  return localStorage.clear()
+}
+
 export const removeDataLS = (key: string) => {
   return localStorage.removeItem(key)
 }

@@ -1,5 +1,6 @@
 import { useContext } from 'react'
-import { Navigate, Outlet, useLocation, useNavigate, useRoutes } from 'react-router-dom'
+import { Navigate, Outlet, useRoutes } from 'react-router-dom'
+import { router } from './components/constant/router'
 import { AuthContext } from './context/auth.context'
 import AuthLayout from './layouts/AuthLayout/AuthLayout'
 import MainLayout from './layouts/MainLayout/MainLayout'
@@ -7,18 +8,22 @@ import Home from './pages/Home/Home'
 import Login from './pages/Login/Login'
 import Profile from './pages/Profile/Profile'
 import Register from './pages/Register/Register'
-
+import { useIsMutating, useIsFetching } from '@tanstack/react-query'
+import Modal from './components/Modal/Modal'
 function App() {
   const { isAuthenticated } = useContext(AuthContext)
+  const isMutating = useIsMutating()
+  const isFetching = useIsFetching()
+
   function ProtectedRoute() {
-    return isAuthenticated ? <Outlet /> : <Navigate to='/login' />
+    return isAuthenticated ? <Outlet /> : <Navigate to={router.login} />
   }
   const RejectedRoute = () => {
-    return !isAuthenticated ? <Outlet /> : <Navigate to='/' />
+    return !isAuthenticated ? <Outlet /> : <Navigate to={router.home} />
   }
   const element = useRoutes([
     {
-      path: '/',
+      path: router.home,
       element: <MainLayout />,
       children: [
         {
@@ -32,11 +37,11 @@ function App() {
       element: <ProtectedRoute />,
       children: [
         {
-          path: '/',
+          path: router.home,
           element: <MainLayout />,
           children: [
             {
-              path: '/profile',
+              path: router.profile,
               element: <Profile />
             }
           ]
@@ -48,7 +53,7 @@ function App() {
       element: <RejectedRoute />,
       children: [
         {
-          path: '/login',
+          path: router.login,
           element: (
             <AuthLayout name='Đăng nhập'>
               <Login />
@@ -56,9 +61,9 @@ function App() {
           )
         },
         {
-          path: '/register',
+          path: router.register,
           element: (
-            <AuthLayout name='Đăng '>
+            <AuthLayout name='Đăng ký'>
               <Register />
             </AuthLayout>
           )
@@ -66,7 +71,21 @@ function App() {
       ]
     }
   ])
-  return <div className='App'>{element}</div>
+  return (
+    <div className='App'>
+      {isMutating + isFetching !== 0 && (
+        <Modal>
+          <div className='lds-ellipsis'>
+            <div />
+            <div />
+            <div />
+            <div />
+          </div>
+        </Modal>
+      )}
+      {element}
+    </div>
+  )
 }
 
 export default App
