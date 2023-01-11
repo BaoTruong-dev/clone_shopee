@@ -4,10 +4,10 @@ export default function SortProducts() {
   return (
     <div className='flex flex-wrap items-center justify-between'>
       <div className='flex items-center gap-[10px]'>
-        <p className='shrink-0'>Sắp xếpp theo</p>
+        <p className='shrink-0'>Sắp xếp theo</p>
         <MainButton>Phổ biến</MainButton>
-        <MainButton>Mới nhất</MainButton>
-        <MainButton>Bán chạy</MainButton>
+        <MainButton className='bg-white text-black'>Mới nhất</MainButton>
+        <MainButton className='bg-white text-black'>Bán chạy</MainButton>
         <select className='w-[200px] rounded-sm border border-slate-200 bg-white p-[10px] outline-none'>
           <option disabled selected value=' '>
             Giá
@@ -17,13 +17,13 @@ export default function SortProducts() {
         </select>
       </div>
       <div className='flex items-center'>
-        <div>
-          <span>1</span>
+        <div className='mr-6'>
+          <span className='text-primary'>1</span>
           <span>/</span>
           <span>9</span>
         </div>
         <div className='flex items-center'>
-          <div className='flex h-[40px] w-[40px] items-center justify-center border border-slate-200 bg-slate-50 opacity-80'>
+          <div className='flex h-[40px] w-[40px] cursor-pointer items-center justify-center border border-grey-light bg-white'>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               fill='none'
@@ -35,7 +35,7 @@ export default function SortProducts() {
               <path strokeLinecap='round' strokeLinejoin='round' d='M8.25 4.5l7.5 7.5-7.5 7.5' />
             </svg>
           </div>
-          <div className='flex h-[40px] w-[40px] items-center justify-center border border-slate-200'>
+          <div className='flex h-[40px] w-[40px] cursor-pointer items-center justify-center border border-grey-light'>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               fill='none'

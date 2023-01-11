@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 import { Navigate, Outlet, useRoutes } from 'react-router-dom'
-import { router } from './components/constant/router'
+import { router } from './constant/router'
 import { AuthContext } from './context/auth.context'
 import AuthLayout from './layouts/AuthLayout/AuthLayout'
 import MainLayout from './layouts/MainLayout/MainLayout'

@@ -3,7 +3,7 @@ import { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import authApi from 'src/apis/auth.api'
 import { AuthContext } from 'src/context/auth.context'
-import { router } from '../constant/router'
+import { router } from '../../constant/router'
 import Popover from '../Popover/Popover'
 export default function Header() {
   const { userInfo, setIsAuthenticated, setUserInfo, isAuthenticated } = useContext(AuthContext)

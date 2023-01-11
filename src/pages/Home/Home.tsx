@@ -1,3 +1,4 @@
+import ProductItem from 'src/components/ProductItem/ProductItem'
 import AsideFilter from './AsideFilter/AsideFilter'
 import SortProducts from './SortProducts/SortProducts'
 
@@ -9,8 +10,16 @@ export default function Home() {
           <AsideFilter />
         </div>
         <div className='col-span-9'>
-          <div className='text-sm'>
+          <div className='bg-grey py-[10px] px-[20px] text-sm'>
             <SortProducts />
+          </div>
+          <div className='mt-[10px]  grid grid-cols-4 gap-4 p-[5px]  '>
+            <ProductItem />
+            <ProductItem />
+            <ProductItem />
+            <ProductItem />
+            <ProductItem />
+            <ProductItem />
           </div>
         </div>
       </div>

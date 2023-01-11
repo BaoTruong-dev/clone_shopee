@@ -13,11 +13,14 @@ module.exports = {
     extend: {
       colors: {
         primary: '#ee4d2d',
-        secondary: '#00bfa5'
+        secondary: '#00bfa5',
+        grey: '#ededed',
+        'grey-light': '#00000017',
       }
     }
   },
   plugins: [
+    require('@tailwindcss/line-clamp'),
     plugin(function ({ addUtilities, addComponents, e, config }) {
       addUtilities({
         '.container': {
