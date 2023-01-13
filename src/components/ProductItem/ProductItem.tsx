@@ -1,27 +1,32 @@
 import { Link } from 'react-router-dom'
+import { Product } from 'src/types/products.type'
 import Star from '../Star/Star'
 
-export default function ProductItem() {
+export default function ProductItem({ product }: { product: Product }) {
   return (
-    <Link to='#'>
+    <Link to='#' className='relative hover:translate-y-[-2px]'>
+      <div className='clip-path-tag absolute right-0 z-10 flex h-[40px] w-[40px] flex-col items-center justify-center bg-yellow-400  text-xs'>
+        <div className=' text-primary'>
+          {Math.round(((product.price_before_discount - product.price) / product.price_before_discount) * 100)}%
+        </div>
+        <div className='text-white'>GIẢM</div>
+      </div>
       <div className='overflow-hidden rounded-sm shadow-md'>
         <div className='relative w-full pt-[100%]'>
-          <img
-            src='https://images.unsplash.com/photo-1671725501632-3980b640f420?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1288&q=80'
-            alt='thumbnail'
-            className='absolute top-0 left-0 h-full w-[100%] object-cover'
-          />
+          <img src={product.image} alt='thumbnail' className='absolute top-0 left-0 h-full w-[100%] object-cover' />
         </div>
         <div className='p-[10px]'>
-          <p className='text-[12px] line-clamp-2'>QUẦN SHORT KAKI NAM CO GIÃN CAO CẤP BẢNG MÀU PASTEL CỰC HOT</p>
+          <p className='text-[12px] line-clamp-2'>{product.name}</p>
           <div className='my-[10px] flex items-center text-sm'>
-            <p className='mr-[5px] text-grey text-slate-500 line-through  '>₫198.000</p>
-            <p className='text-primary'>₫198.000</p>
+            <p className='mr-[5px] text-grey text-slate-500 line-through'>
+              ₫{new Intl.NumberFormat('de-DE').format(product.price_before_discount)}
+            </p>
+            <p className='text-primary'>₫{new Intl.NumberFormat('de-DE').format(product.price)}</p>
           </div>
           <div className='flex items-center'>
-            <Star />
+            <Star rating={product.rating} />
             <div className='ml-[5px] text-xs '>
-              Đã bán <span>5,7k</span>
+              Đã bán <span>{Intl.NumberFormat('en', { notation: 'compact' }).format(product.sold)}</span>
             </div>
           </div>
         </div>

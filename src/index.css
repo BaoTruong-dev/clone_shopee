@@ -7,6 +7,12 @@ label {
   display: block;
 }
 
+@layer utilities {
+  .clip-path-tag {
+    clip-path: polygon(0 0, 100% 1%, 100% 100%, 50% 88%, 0 100%, 0 100%);
+  }
+}
+
 .lds-ellipsis {
   display: inline-block;
   position: relative;

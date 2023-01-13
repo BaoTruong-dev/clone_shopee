@@ -9,11 +9,11 @@ export default function SortProducts() {
         <MainButton className='bg-white text-black'>Mới nhất</MainButton>
         <MainButton className='bg-white text-black'>Bán chạy</MainButton>
         <select className='w-[200px] rounded-sm border border-slate-200 bg-white p-[10px] outline-none'>
-          <option disabled selected value=' '>
+          <option disabled value=' '>
             Giá
           </option>
-          <option value=''>Giá: Thấp đến Cao</option>
-          <option value=''>Giá: Cao đến Thấp</option>
+          <option value='desc'>Giá: Thấp đến Cao</option>
+          <option value='asc'>Giá: Cao đến Thấp</option>
         </select>
       </div>
       <div className='flex items-center'>
