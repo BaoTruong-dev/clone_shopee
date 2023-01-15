@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import queryString from 'query-string'
+import { useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { productApi } from 'src/apis/product.api'
 import Paginate from 'src/components/Paginate/Paginate'
@@ -11,7 +12,7 @@ import SortProducts from './SortProducts/SortProducts'
 
 export default function Home() {
   const queryString = useQueryConfig()
-
+  const [currentPage, setCurrentPage] = useState<number>(1)
   const { data: productsData } = useQuery({
     queryKey: ['products'],
     queryFn: () => {
@@ -34,7 +35,7 @@ export default function Home() {
               return <ProductItem key={product._id} product={product} />
             })}
           </div>
-          <Paginate />
+          <Paginate currentPage={currentPage} setCurrentPage={setCurrentPage} pageSize={10} />
         </div>
       </div>
     </div>

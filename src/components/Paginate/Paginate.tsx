@@ -1,6 +1,64 @@
-import React from 'react'
+import classNames from 'classnames'
 
-export default function Paginate() {
+interface PaginateProps {
+  currentPage: number
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>
+  pageSize: number
+}
+
+export default function Paginate({ currentPage, setCurrentPage, pageSize }: PaginateProps) {
+  const renderUiPage = () => {
+    let dot = false
+    return Array(pageSize)
+      .fill(0)
+      .map((_, index) => {
+        if (
+          index + 1 === currentPage ||
+          index + 1 === pageSize ||
+          index + 1 === pageSize - 1 ||
+          index + 1 === 1 ||
+          index + 1 === 2
+        ) {
+          return (
+            // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
+            <div
+              className={classNames('cursor-pointer', { 'text-primary': index + 1 === currentPage })}
+              key={index}
+              onClick={() => setCurrentPage(index + 1)}
+            >
+              {index + 1}
+            </div>
+          )
+        } else if (
+          currentPage - (index + 1) === 1 ||
+          currentPage - (index + 1) === 2 ||
+          currentPage + 1 === index + 1 ||
+          currentPage + 2 === index + 1
+        ) {
+          return (
+            // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+            <div
+              className={classNames('cursor-pointer', { 'text-primary': index + 1 === currentPage })}
+              key={index}
+              onClick={() => setCurrentPage(index + 1)}
+            >
+              {index + 1}
+            </div>
+          )
+        } else {
+          if (!dot) {
+            dot = true
+            return (
+              <div className='cursor-pointer' key={index}>
+                ...
+              </div>
+            )
+          }
+          return null
+        }
+      })
+  }
+
   return (
     <div className='mt-[40px] flex justify-center'>
       <div className='flex items-center justify-center gap-8 text-[#959595]'>
@@ -14,11 +72,7 @@ export default function Paginate() {
         >
           <path strokeLinecap='round' strokeLinejoin='round' d='M15.75 19.5L8.25 12l7.5-7.5' />
         </svg>
-        <div className='cursor-pointer'>1</div>
-        <div className='cursor-pointer'>1</div>
-        <div className='cursor-pointer'>1</div>
-        <div className='cursor-pointer'>1</div>
-        <div className='cursor-pointer'>1</div>
+        {renderUiPage()}
         <svg
           xmlns='http://www.w3.org/2000/svg'
           fill='none'
