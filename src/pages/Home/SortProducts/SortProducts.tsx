@@ -8,10 +8,8 @@ export default function SortProducts() {
         <MainButton>Phổ biến</MainButton>
         <MainButton className='bg-white text-black'>Mới nhất</MainButton>
         <MainButton className='bg-white text-black'>Bán chạy</MainButton>
-        <select className='w-[200px] rounded-sm border border-slate-200 bg-white p-[10px] outline-none'>
-          <option disabled value=' '>
-            Giá
-          </option>
+        <select className='w-[200px] rounded-sm border border-slate-200 bg-white py-[10px] px-[15px] outline-none'>
+          <option value=''>Giá</option>
           <option value='desc'>Giá: Thấp đến Cao</option>
           <option value='asc'>Giá: Cao đến Thấp</option>
         </select>
@@ -23,7 +21,7 @@ export default function SortProducts() {
           <span>9</span>
         </div>
         <div className='flex items-center'>
-          <div className='flex h-[40px] w-[40px] cursor-pointer items-center justify-center border border-grey-light bg-white'>
+          <div className='flex h-[40px] w-[40px] cursor-pointer items-center justify-center border border-grey-light '>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               fill='none'
@@ -35,7 +33,7 @@ export default function SortProducts() {
               <path strokeLinecap='round' strokeLinejoin='round' d='M8.25 4.5l7.5 7.5-7.5 7.5' />
             </svg>
           </div>
-          <div className='flex h-[40px] w-[40px] cursor-pointer items-center justify-center border border-grey-light'>
+          <div className='flex h-[40px] w-[40px] cursor-pointer items-center justify-center border border-grey-light bg-white hover:bg-grey'>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               fill='none'

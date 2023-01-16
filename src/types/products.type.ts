@@ -27,8 +27,8 @@ export interface Product {
   _id: string
 }
 
-export interface ProductParams {
-  page?: number
+export interface ProductURL {
+  page?: number | string
   limit?: number
   order?: 'desc' | 'asc'
   sort_by?: 'createdAt' | 'view' | 'sold' | 'price'
