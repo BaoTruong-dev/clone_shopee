@@ -1,17 +1,140 @@
+import classNames from 'classnames'
+import { useNavigate } from 'react-router-dom'
 import MainButton from 'src/components/MainButton/MainButton'
+import { router } from 'src/constant/router'
+import { Category } from 'src/types/category.type'
+import { ConfigURL } from '../Home'
+import _ from 'lodash'
+import { useState } from 'react'
+import StarFilter from 'src/components/StarFilter/StarFilter'
 
-export default function AsideFilter() {
+interface AsideFilterProps {
+  queryConfig: ConfigURL
+  categories: Category[]
+}
+interface PriceFilter {
+  minPrice: number
+  maxPrice: number
+}
+
+export default function AsideFilter({ queryConfig, categories }: AsideFilterProps) {
+  const navigate = useNavigate()
+  const [priceFilter, setPriceFilter] = useState<PriceFilter>({
+    minPrice: NaN,
+    maxPrice: NaN
+  })
+  const [errorPrice, setErrorPrice] = useState<string>('')
+  const handleOnChangePrice = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setPriceFilter({
+      ...priceFilter,
+      [key]: value
+    })
+  }
+  const handleQueryString = (key: string, value: string) => {
+    const queryString = new URLSearchParams({
+      ...queryConfig,
+      [key]: value
+    }).toString()
+    return navigate({
+      pathname: router.home,
+      search: `${queryString}`
+    })
+  }
+  const handleSortPrice = () => {
+    if (priceFilter.minPrice && priceFilter.maxPrice) {
+      if (priceFilter.minPrice > priceFilter.maxPrice) {
+        return setErrorPrice('Vui lòng điền khoảng giá phù hợp')
+      }
+      const queryString = new URLSearchParams({
+        ...queryConfig,
+        price_max: priceFilter.maxPrice.toString(),
+        price_min: priceFilter.minPrice.toString()
+      }).toString()
+      navigate({
+        pathname: router.home,
+        search: `${queryString}`
+      })
+    } else {
+      if (priceFilter.minPrice) {
+        const queryString = new URLSearchParams(
+          _.omit(
+            {
+              ...queryConfig,
+              price_min: priceFilter.minPrice.toString()
+            },
+            'price_max'
+          )
+        ).toString()
+        navigate({
+          pathname: router.home,
+          search: `${queryString}`
+        })
+      }
+      if (priceFilter.maxPrice) {
+        const queryString = new URLSearchParams(
+          _.omit(
+            {
+              ...queryConfig,
+              price_max: priceFilter.maxPrice.toString()
+            },
+            'price_min'
+          )
+        ).toString()
+        navigate({
+          pathname: router.home,
+          search: `${queryString}`
+        })
+      }
+      if (!priceFilter.maxPrice && !priceFilter.minPrice) {
+        return setErrorPrice('Vui lòng điền khoảng giá phù hợp')
+      }
+    }
+
+    return setErrorPrice('')
+  }
+  const activeClass = (id: string) => {
+    return id === queryConfig.category
+  }
+
+  const handleClearCategoryParams = () => {
+    const queryString = new URLSearchParams(
+      _.omit(
+        {
+          ...queryConfig
+        },
+        'category'
+      )
+    ).toString()
+    return navigate({
+      pathname: router.home,
+      search: `${queryString}`
+    })
+  }
+  const handleClearFilter = () => {
+    const queryString = new URLSearchParams(
+      _.omit(
+        {
+          ...queryConfig
+        },
+        ['rating_filter', 'price_max', 'price_min', 'category']
+      )
+    ).toString()
+    return navigate({
+      pathname: router.home,
+      search: `${queryString}`
+    })
+  }
   return (
     <div className='text-sm'>
       <div>
-        <div className='flex items-center'>
+        <div className='flex items-center' onClick={handleClearCategoryParams} tabIndex={0} role='button'>
           <svg
             xmlns='http://www.w3.org/2000/svg'
-            fill='none'
             viewBox='0 0 24 24'
             strokeWidth={1.5}
-            stroke='currentColor'
-            className='h-3 w-3'
+            stroke={!queryConfig.category ? '#ee4d2d' : 'currentColor'}
+            className='h-4 w-4'
           >
             <path
               strokeLinecap='round'
@@ -19,15 +142,35 @@ export default function AsideFilter() {
               d='M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75'
             />
           </svg>
-          <p className='ml-[5px]  font-bold'>Tất cả danh mục</p>
+          <p className={classNames('ml-[5px] cursor-pointer font-bold', { 'text-primary': !queryConfig.category })}>
+            Tất cả danh mục
+          </p>
         </div>
         <div className='my-[15px] h-[1px] w-full bg-slate-200'></div>
-        <div className='mb-[5px] flex items-center'>
-          <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 512' className='h-3 w-3 fill-primary'>
-            <path d='M246.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-9.2-9.2-22.9-11.9-34.9-6.9s-19.8 16.6-19.8 29.6l0 256c0 12.9 7.8 24.6 19.8 29.6s25.7 2.2 34.9-6.9l128-128z' />
-          </svg>
-          <p className='ml-[5px] text-sm font-bold text-primary'>Thời trang nam</p>
-        </div>
+        {categories?.map((e) => {
+          return (
+            <div
+              className='mb-[5px] flex cursor-pointer items-center'
+              key={e._id}
+              onClick={() => handleQueryString('category', e._id)}
+              tabIndex={0}
+              role='button'
+            >
+              <div className='h-3 w-3 '>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  viewBox='0 0 256 512'
+                  className={classNames('hidden h-full w-full fill-primary', { '!block': activeClass(e._id) })}
+                >
+                  <path d='M246.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-9.2-9.2-22.9-11.9-34.9-6.9s-19.8 16.6-19.8 29.6l0 256c0 12.9 7.8 24.6 19.8 29.6s25.7 2.2 34.9-6.9l128-128z' />
+                </svg>
+              </div>
+              <p className={classNames('ml-[5px] text-sm ', { 'font-bold text-primary': activeClass(e._id) })}>
+                {e.name}
+              </p>
+            </div>
+          )
+        })}
       </div>
       <div className='mt-[20px]'>
         <div className='flex items-center'>
@@ -54,153 +197,32 @@ export default function AsideFilter() {
             <input
               type='number'
               placeholder='₫ TỪ'
+              value={priceFilter.minPrice}
+              min={1}
+              onChange={handleOnChangePrice('minPrice')}
               className='w-full rounded-sm border border-slate-200 p-[5px] outline-none'
             />
             <div className=' relative after:absolute after:top-[50%] after:left-[50%] after:h-[2px] after:w-2 after:translate-x-[-50%] after:translate-y-[-50%] after:bg-slate-200'></div>
             <input
               type='number'
               placeholder='₫ ĐẾN'
+              onChange={handleOnChangePrice('maxPrice')}
+              value={priceFilter.maxPrice}
               className='w-full rounded-sm border border-slate-200 p-[5px] outline-none'
             />
           </div>
-          <MainButton className='mt-[30px]'>Áp dụng</MainButton>
+          <div className='mt-2 text-center text-xs text-red-500'>{errorPrice}</div>
+          <MainButton onClick={handleSortPrice} className='mt-[30px]'>
+            Áp dụng
+          </MainButton>
         </div>
         <div className='my-[15px] h-[1px] w-full bg-slate-200'></div>
         <div>
           <div className='mb-[5px] font-medium'>Đánh giá</div>
-          <div className='flex items-center gap-[10px]'>
-            <div className='flex items-center gap-[5px]'>
-              <svg viewBox='0 0 9.5 8' className='h-4 w-4'>
-                <defs>
-                  <linearGradient id='ratingStarGradient' x1='50%' x2='50%' y1='0%' y2='100%'>
-                    <stop offset={0} stopColor='#ffca11' />
-                    <stop offset={1} stopColor='#ffad27' />
-                  </linearGradient>
-                  <polygon
-                    id='ratingStar'
-                    points='14.910357 6.35294118 12.4209136 7.66171903 12.896355 4.88968305 10.8823529 2.92651626 13.6656353 2.52208166 14.910357 0 16.1550787 2.52208166 18.9383611 2.92651626 16.924359 4.88968305 17.3998004 7.66171903'
-                  />
-                </defs>
-                <g fill='url(#ratingStarGradient)' fillRule='evenodd' stroke='none' strokeWidth={1}>
-                  <g transform='translate(-876 -1270)'>
-                    <g transform='translate(155 992)'>
-                      <g transform='translate(600 29)'>
-                        <g transform='translate(10 239)'>
-                          <g transform='translate(101 10)'>
-                            <use stroke='#ffa727' strokeWidth='.5' xlinkHref='#ratingStar' />
-                          </g>
-                        </g>
-                      </g>
-                    </g>
-                  </g>
-                </g>
-              </svg>
-              <svg viewBox='0 0 9.5 8' className='h-4 w-4'>
-                <defs>
-                  <linearGradient id='ratingStarGradient' x1='50%' x2='50%' y1='0%' y2='100%'>
-                    <stop offset={0} stopColor='#ffca11' />
-                    <stop offset={1} stopColor='#ffad27' />
-                  </linearGradient>
-                  <polygon
-                    id='ratingStar'
-                    points='14.910357 6.35294118 12.4209136 7.66171903 12.896355 4.88968305 10.8823529 2.92651626 13.6656353 2.52208166 14.910357 0 16.1550787 2.52208166 18.9383611 2.92651626 16.924359 4.88968305 17.3998004 7.66171903'
-                  />
-                </defs>
-                <g fill='url(#ratingStarGradient)' fillRule='evenodd' stroke='none' strokeWidth={1}>
-                  <g transform='translate(-876 -1270)'>
-                    <g transform='translate(155 992)'>
-                      <g transform='translate(600 29)'>
-                        <g transform='translate(10 239)'>
-                          <g transform='translate(101 10)'>
-                            <use stroke='#ffa727' strokeWidth='.5' xlinkHref='#ratingStar' />
-                          </g>
-                        </g>
-                      </g>
-                    </g>
-                  </g>
-                </g>
-              </svg>
-              <svg viewBox='0 0 9.5 8' className='h-4 w-4'>
-                <defs>
-                  <linearGradient id='ratingStarGradient' x1='50%' x2='50%' y1='0%' y2='100%'>
-                    <stop offset={0} stopColor='#ffca11' />
-                    <stop offset={1} stopColor='#ffad27' />
-                  </linearGradient>
-                  <polygon
-                    id='ratingStar'
-                    points='14.910357 6.35294118 12.4209136 7.66171903 12.896355 4.88968305 10.8823529 2.92651626 13.6656353 2.52208166 14.910357 0 16.1550787 2.52208166 18.9383611 2.92651626 16.924359 4.88968305 17.3998004 7.66171903'
-                  />
-                </defs>
-                <g fill='url(#ratingStarGradient)' fillRule='evenodd' stroke='none' strokeWidth={1}>
-                  <g transform='translate(-876 -1270)'>
-                    <g transform='translate(155 992)'>
-                      <g transform='translate(600 29)'>
-                        <g transform='translate(10 239)'>
-                          <g transform='translate(101 10)'>
-                            <use stroke='#ffa727' strokeWidth='.5' xlinkHref='#ratingStar' />
-                          </g>
-                        </g>
-                      </g>
-                    </g>
-                  </g>
-                </g>
-              </svg>
-              <svg viewBox='0 0 9.5 8' className='h-4 w-4'>
-                <defs>
-                  <linearGradient id='ratingStarGradient' x1='50%' x2='50%' y1='0%' y2='100%'>
-                    <stop offset={0} stopColor='#ffca11' />
-                    <stop offset={1} stopColor='#ffad27' />
-                  </linearGradient>
-                  <polygon
-                    id='ratingStar'
-                    points='14.910357 6.35294118 12.4209136 7.66171903 12.896355 4.88968305 10.8823529 2.92651626 13.6656353 2.52208166 14.910357 0 16.1550787 2.52208166 18.9383611 2.92651626 16.924359 4.88968305 17.3998004 7.66171903'
-                  />
-                </defs>
-                <g fill='url(#ratingStarGradient)' fillRule='evenodd' stroke='none' strokeWidth={1}>
-                  <g transform='translate(-876 -1270)'>
-                    <g transform='translate(155 992)'>
-                      <g transform='translate(600 29)'>
-                        <g transform='translate(10 239)'>
-                          <g transform='translate(101 10)'>
-                            <use stroke='#ffa727' strokeWidth='.5' xlinkHref='#ratingStar' />
-                          </g>
-                        </g>
-                      </g>
-                    </g>
-                  </g>
-                </g>
-              </svg>
-              <svg viewBox='0 0 9.5 8' className='h-4 w-4'>
-                <defs>
-                  <linearGradient id='ratingStarGradient' x1='50%' x2='50%' y1='0%' y2='100%'>
-                    <stop offset={0} stopColor='#ffca11' />
-                    <stop offset={1} stopColor='#ffad27' />
-                  </linearGradient>
-                  <polygon
-                    id='ratingStar'
-                    points='14.910357 6.35294118 12.4209136 7.66171903 12.896355 4.88968305 10.8823529 2.92651626 13.6656353 2.52208166 14.910357 0 16.1550787 2.52208166 18.9383611 2.92651626 16.924359 4.88968305 17.3998004 7.66171903'
-                  />
-                </defs>
-                <g fill='url(#ratingStarGradient)' fillRule='evenodd' stroke='none' strokeWidth={1}>
-                  <g transform='translate(-876 -1270)'>
-                    <g transform='translate(155 992)'>
-                      <g transform='translate(600 29)'>
-                        <g transform='translate(10 239)'>
-                          <g transform='translate(101 10)'>
-                            <use stroke='#ffa727' strokeWidth='.5' xlinkHref='#ratingStar' />
-                          </g>
-                        </g>
-                      </g>
-                    </g>
-                  </g>
-                </g>
-              </svg>
-            </div>
-            <p>Trở lên</p>
-          </div>
+          <StarFilter queryConfig={queryConfig} />
         </div>
         <div className='my-[15px] h-[1px] w-full bg-slate-200'></div>
-        <MainButton>Xoá tất cả</MainButton>
+        <MainButton onClick={handleClearFilter}>Xoá tất cả</MainButton>
       </div>
     </div>
   )
