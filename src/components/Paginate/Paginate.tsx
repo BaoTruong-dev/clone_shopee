@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import { ConfigURL } from 'src/pages/Home/Home'
 import { router } from '../../constant/router'
 import { number } from 'yup'
-import useQueryString from 'src/hooks/useQueryString'
 
 interface PaginateProps {
   queryConfig: ConfigURL

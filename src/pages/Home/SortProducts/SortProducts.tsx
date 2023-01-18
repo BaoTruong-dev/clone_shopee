@@ -12,18 +12,19 @@ interface SortProps {
 
 export default function SortProducts({ queryConfig, pageSize }: SortProps) {
   const navigate = useNavigate()
+
   const page = Number(queryConfig.page)
   const checkActive = (value: string) => {
     return value === queryConfig.sort_by
   }
-  const handleSortValue = (key: string, value: string) => {
+  const handleSortValue = (key: string, value: string, omit?: string | string[]) => {
     const queryString = new URLSearchParams(
       _.omit(
         {
           ...queryConfig,
           [key]: value
         },
-        'order'
+        omit ? omit : ''
       )
     ).toString()
     return navigate({
@@ -48,29 +49,34 @@ export default function SortProducts({ queryConfig, pageSize }: SortProps) {
       <div className='flex items-center gap-[10px]'>
         <p className='shrink-0'>Sắp xếp theo</p>
         <MainButton
-          onClick={() => handleSortValue('sort_by', 'createdAt')}
+          onClick={() => handleSortValue('sort_by', 'createdAt', 'order')}
           className={classNames('bg-white text-black', { '!bg-primary !text-white': checkActive('createdAt') })}
         >
           Mới nhất
         </MainButton>
         <MainButton
-          onClick={() => handleSortValue('sort_by', 'view')}
+          onClick={() => handleSortValue('sort_by', 'view', 'order')}
           className={classNames('bg-white text-black', { '!bg-primary !text-white': checkActive('view') })}
         >
           Phổ biến
         </MainButton>
         <MainButton
-          onClick={() => handleSortValue('sort_by', 'sold')}
+          onClick={() => handleSortValue('sort_by', 'sold', 'order')}
           className={classNames('bg-white text-black', { '!bg-primary !text-white': checkActive('sold') })}
         >
           Bán chạy
         </MainButton>
         <select
-          className='w-[200px] rounded-sm border border-slate-200 bg-white py-[10px] px-[15px] outline-none'
+          className={classNames(
+            'w-[200px] rounded-sm border border-slate-200 bg-white py-[10px] px-[15px] outline-none',
+            { '!bg-primary !text-white': queryConfig.order }
+          )}
           value={queryConfig.order}
           onChange={handleSortPrice}
         >
-          <option value=' '>Giá</option>
+          <option value='' disabled>
+            Giá
+          </option>
           <option value='asc'>Giá: Thấp đến Cao</option>
           <option value='desc'>Giá: Cao đến Thấp</option>
         </select>

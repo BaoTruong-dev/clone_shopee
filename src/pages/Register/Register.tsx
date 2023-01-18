@@ -10,7 +10,7 @@ import { router } from 'src/constant/router'
 import Input from 'src/components/Input/Input'
 import { AuthContext } from 'src/context/auth.context'
 import schema from 'src/schema/schema'
-import compareValue from 'src/utils/compareValue'
+import { compareValue } from 'src/utils/utils'
 interface FormInputs {
   email: string
   password: string

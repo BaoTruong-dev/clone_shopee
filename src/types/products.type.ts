@@ -13,6 +13,7 @@ export interface Product {
     name: string
     __v: number
   }
+  description: string
   createdAt: string
   image: string
   images: string[]

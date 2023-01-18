@@ -19,7 +19,7 @@ export default function Home() {
     {
       page: queryString.page || '1',
       limit: queryString.limit,
-      order: queryString.order || 'desc',
+      order: queryString.order,
       sort_by: queryString.sort_by || 'createdAt',
       category: queryString.category,
       exclude: queryString.exclude,

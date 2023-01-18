@@ -1,14 +1,14 @@
 import { Link } from 'react-router-dom'
 import { Product } from 'src/types/products.type'
+import { handlePercent } from 'src/utils/utils'
 import Star from '../Star/Star'
 
 export default function ProductItem({ product }: { product: Product }) {
+  const percent = handlePercent(product.price_before_discount, product.price)
   return (
-    <Link to='#' className='relative hover:translate-y-[-2px]'>
+    <Link to={`/${product._id}`} className='relative hover:translate-y-[-2px]'>
       <div className='clip-path-tag absolute right-0 z-10 flex h-[40px] w-[40px] flex-col items-center justify-center bg-yellow-400  text-xs'>
-        <div className=' text-primary'>
-          {Math.round(((product.price_before_discount - product.price) / product.price_before_discount) * 100)}%
-        </div>
+        <div className=' text-primary'>{percent}</div>
         <div className='text-white'>GIẢM</div>
       </div>
       <div className='overflow-hidden rounded-sm shadow-md'>
@@ -18,7 +18,7 @@ export default function ProductItem({ product }: { product: Product }) {
         <div className='p-[10px]'>
           <p className='text-[12px] line-clamp-2'>{product.name}</p>
           <div className='my-[10px] flex items-center text-sm'>
-            <p className='mr-[5px] text-grey text-slate-500 line-through'>
+            <p className='mr-[5px] text-[#929292] line-through'>
               ₫{new Intl.NumberFormat('de-DE').format(product.price_before_discount)}
             </p>
             <p className='text-primary'>₫{new Intl.NumberFormat('de-DE').format(product.price)}</p>
@@ -26,7 +26,7 @@ export default function ProductItem({ product }: { product: Product }) {
           <div className='flex items-center'>
             <Star rating={product.rating} />
             <div className='ml-[5px] text-xs '>
-              Đã bán <span>{Intl.NumberFormat('en', { notation: 'compact' }).format(product.sold)}</span>
+              Đã bán <span>{Intl.NumberFormat('en', { notation: 'compact' }).format(product.sold).toLowerCase()}</span>
             </div>
           </div>
         </div>

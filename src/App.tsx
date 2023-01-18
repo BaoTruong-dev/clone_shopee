@@ -1,15 +1,17 @@
+import { useIsFetching, useIsMutating } from '@tanstack/react-query'
 import { useContext } from 'react'
 import { Navigate, Outlet, useRoutes } from 'react-router-dom'
+import Modal from './components/Modal/Modal'
 import { router } from './constant/router'
 import { AuthContext } from './context/auth.context'
 import AuthLayout from './layouts/AuthLayout/AuthLayout'
 import MainLayout from './layouts/MainLayout/MainLayout'
 import Home from './pages/Home/Home'
 import Login from './pages/Login/Login'
+import ProductDetail from './pages/ProductDetail/ProductDetail'
 import Profile from './pages/Profile/Profile'
 import Register from './pages/Register/Register'
-import { useIsMutating, useIsFetching } from '@tanstack/react-query'
-import Modal from './components/Modal/Modal'
+
 function App() {
   const { isAuthenticated } = useContext(AuthContext)
   const isMutating = useIsMutating()
@@ -29,6 +31,10 @@ function App() {
         {
           index: true,
           element: <Home />
+        },
+        {
+          path: router.productDetail,
+          element: <ProductDetail />
         }
       ]
     },
@@ -48,6 +54,7 @@ function App() {
         }
       ]
     },
+
     {
       path: '',
       element: <RejectedRoute />,

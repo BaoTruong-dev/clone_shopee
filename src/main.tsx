@@ -6,6 +6,8 @@ import { BrowserRouter } from 'react-router-dom'
 import App from './App'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+// eslint-disable-next-line import/no-unresolved
+import 'swiper/css'
 import './index.css'
 import { AuthProvider } from './context/auth.context'
 const queryClient = new QueryClient({
