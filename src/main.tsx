@@ -3,13 +3,12 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
-import App from './App'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import App from './App'
 // eslint-disable-next-line import/no-unresolved
-import 'swiper/css'
-import './index.css'
 import { AuthProvider } from './context/auth.context'
+import './index.css'
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

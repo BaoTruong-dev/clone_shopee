@@ -1,33 +1,52 @@
 import { useQuery } from '@tanstack/react-query'
 import classNames from 'classnames'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { productApi } from 'src/apis/product.api'
 import MainButton from 'src/components/MainButton/MainButton'
 import ProductItem from 'src/components/ProductItem/ProductItem'
 import Star from 'src/components/Star/Star'
 import { handlePercent } from 'src/utils/utils'
-import { Swiper, SwiperSlide } from 'swiper/react'
 export default function ProductDetail() {
   const [slideRange, setSlideRange] = useState<number[]>([0, 5])
-  const [activeImage, setActiveImage] = useState<number>(0)
+  const [activeImage, setActiveImage] = useState<string>('')
+  const imageZoomRef = useRef<HTMLImageElement>(null)
   const { id } = useParams()
+
   const { data: productInfo } = useQuery({
     queryKey: ['product', id],
     queryFn: () => {
-      return productApi.getProductDetail(id as string)
+      return productApi.getProductDetail(id?.split(',')[1] as string)
     },
     keepPreviousData: true
   })
   const product = productInfo?.data.data
 
   const { data: productsRelative } = useQuery({
-    queryKey: ['product_relative', id],
+    queryKey: ['product_relative', product?.category._id, id],
     queryFn: () => {
       return productApi.getProducts({ category: product?.category._id })
     }
   })
 
+  useEffect(() => {
+    if (product) {
+      setActiveImage(product?.images[0])
+    }
+  }, [product])
+
+  const handleHoverZoom = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const image = imageZoomRef.current as HTMLImageElement
+    const x = e.clientX - e.currentTarget.offsetLeft
+    const y = e.clientY - e.currentTarget.offsetTop
+    image.style.transformOrigin = `${x}px ${y}px`
+    image.style.transform = 'scale(2)'
+  }
+  const handleRemoveHoverZoom = () => {
+    const image = imageZoomRef.current as HTMLImageElement
+
+    image.style.transform = 'scale(1)'
+  }
   const handleNextSlideImage = () => {
     if (product && slideRange[1] < product.images.length) {
       setSlideRange((prev) => [prev[0] + 1, prev[1] + 1])
@@ -38,18 +57,23 @@ export default function ProductDetail() {
       setSlideRange((prev) => [prev[0] - 1, prev[1] - 1])
     }
   }
-  const handleHoverActiveImage = (index: number) => {
-    setActiveImage(index)
+  const handleHoverActiveImage = (url: string) => {
+    setActiveImage(url)
   }
   const percent = product && handlePercent(product.price_before_discount, product.price)
+
   if (!product) return null
   return (
     <div className='pt-[40px]'>
       <div className='container'>
         <div className='grid grid-cols-12 gap-6 p-[20px] shadow-md'>
           <div className='col-span-5'>
-            <div className='relative w-full pb-[100%]'>
-              <img src={product.images[activeImage]} alt={product.name} className='absolute inset-0 object-cover' />
+            <div
+              className='relative w-full cursor-zoom-in overflow-hidden  pb-[100%]'
+              onMouseMove={handleHoverZoom}
+              onMouseLeave={handleRemoveHoverZoom}
+            >
+              <img ref={imageZoomRef} src={activeImage} alt={product.name} className='absolute inset-0 object-cover' />
             </div>
             <div className='relative mt-[15px] grid grid-cols-5 gap-4'>
               <button
@@ -67,13 +91,13 @@ export default function ProductDetail() {
                   <path strokeLinecap='round' strokeLinejoin='round' d='M15.75 19.5L8.25 12l7.5-7.5' />
                 </svg>
               </button>
-              {product.images.slice(...slideRange).map((e, index) => {
-                const isActive = index === activeImage
+              {product.images.slice(...slideRange).map((e) => {
+                const isActive = e === activeImage
                 return (
                   <div
                     className='relative col-span-1 w-full pb-[100%]'
                     key={e}
-                    onMouseEnter={() => handleHoverActiveImage(index)}
+                    onMouseEnter={() => handleHoverActiveImage(e)}
                   >
                     <div
                       className={classNames('absolute inset-0 z-10 ', { 'border-2 border-primary': isActive })}
@@ -199,14 +223,10 @@ export default function ProductDetail() {
         </div>
         <div className='mt-[50px]'>
           <p className='mb-[20px] font-[500] text-[#808080]'>CÓ THỂ BẠN CŨNG THÍCH</p>
-          <Swiper spaceBetween={20} slidesPerView={4}>
+          <div className='grid  grid-cols-5 gap-4'>
             {productsRelative &&
-              productsRelative.data.data.products.map((e) => (
-                <SwiperSlide key={e._id}>
-                  <ProductItem product={e} />
-                </SwiperSlide>
-              ))}
-          </Swiper>
+              productsRelative.data.data.products.map((e) => <ProductItem product={e} key={e._id} />)}
+          </div>
         </div>
       </div>
     </div>

@@ -5,13 +5,19 @@ import Star from '../Star/Star'
 
 export default function ProductItem({ product }: { product: Product }) {
   const percent = handlePercent(product.price_before_discount, product.price)
+
+  const link = `${product.name.replace(
+    // eslint-disable-next-line no-useless-escape
+    /\s|!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g,
+    ''
+  )}-i,${product._id}`
   return (
-    <Link to={`/${product._id}`} className='relative hover:translate-y-[-2px]'>
+    <Link to={`/${link}`} className='relative h-full hover:translate-y-[-2px]'>
       <div className='clip-path-tag absolute right-0 z-10 flex h-[40px] w-[40px] flex-col items-center justify-center bg-yellow-400  text-xs'>
         <div className=' text-primary'>{percent}</div>
         <div className='text-white'>GIẢM</div>
       </div>
-      <div className='overflow-hidden rounded-sm shadow-md'>
+      <div className='h-full overflow-hidden rounded-sm shadow-md'>
         <div className='relative w-full pt-[100%]'>
           <img src={product.image} alt='thumbnail' className='absolute top-0 left-0 h-full w-[100%] object-cover' />
         </div>

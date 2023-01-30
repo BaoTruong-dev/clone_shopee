@@ -1,6 +1,6 @@
 import { useIsFetching, useIsMutating } from '@tanstack/react-query'
-import { useContext } from 'react'
-import { Navigate, Outlet, useRoutes } from 'react-router-dom'
+import { useContext, useEffect } from 'react'
+import { Navigate, Outlet, useLocation, useRoutes } from 'react-router-dom'
 import Modal from './components/Modal/Modal'
 import { router } from './constant/router'
 import { AuthContext } from './context/auth.context'
@@ -16,7 +16,10 @@ function App() {
   const { isAuthenticated } = useContext(AuthContext)
   const isMutating = useIsMutating()
   const isFetching = useIsFetching()
-
+  const param = useLocation()
+  useEffect(() => {
+    window.scrollTo({ top: 0 })
+  }, [param.pathname])
   function ProtectedRoute() {
     return isAuthenticated ? <Outlet /> : <Navigate to={router.login} />
   }

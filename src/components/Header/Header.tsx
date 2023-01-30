@@ -137,7 +137,7 @@ export default function Header() {
             </div>
           </form>
           <Popover
-            arrowLeft='96%'
+            arrowLeft='97%'
             contentElement={
               <div className='rouned-sm max-w-[400px] py-[10px]'>
                 <p className='mb-[20px] px-[10px] text-[18px] text-slate-400'>Sản phẩm mới thêm</p>
