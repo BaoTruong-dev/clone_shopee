@@ -9,7 +9,7 @@ import App from './App'
 // eslint-disable-next-line import/no-unresolved
 import { AuthProvider } from './context/auth.context'
 import './index.css'
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false // default: true

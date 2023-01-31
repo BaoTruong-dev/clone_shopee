@@ -49,7 +49,7 @@ export default function Popover({
                 width: 'max-content',
                 transformOrigin: `${origin} top`
               }}
-              className='mt-[10px] rounded-sm border border-gray-200 bg-white text-[14px] text-black shadow-2xl'
+              className='relative z-[9999] mt-[10px] rounded-sm border border-gray-200 bg-white text-[14px] text-black shadow-2xl '
             >
               <>
                 {contentElement}

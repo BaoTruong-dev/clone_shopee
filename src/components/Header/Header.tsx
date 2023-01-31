@@ -1,13 +1,29 @@
-import { useMutation } from '@tanstack/react-query'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { useContext } from 'react'
-import { Link } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+import { Link, useNavigate } from 'react-router-dom'
 import authApi from 'src/apis/auth.api'
+import { purchasesApi } from 'src/apis/purchases.api'
 import { AuthContext } from 'src/context/auth.context'
+import useQueryConfig, { ConfigURL } from 'src/hooks/useQueryConfig'
+import schema, { SchemaType } from 'src/schema/schema'
 import { router } from '../../constant/router'
+import empty_cart from '../../assets/cart.png'
 import Popover from '../Popover/Popover'
+
+const schemaName = schema.pick(['name'])
+type FormData = Pick<SchemaType, 'name'>
 export default function Header() {
   const { userInfo, setIsAuthenticated, setUserInfo, isAuthenticated } = useContext(AuthContext)
-
+  const navigate = useNavigate()
+  const { register, handleSubmit } = useForm({
+    defaultValues: {
+      name: ''
+    },
+    resolver: yupResolver(schemaName)
+  })
+  const queryConfig: ConfigURL = useQueryConfig()
   const logoutMutation = useMutation({
     mutationFn: authApi.logout,
     onSuccess: () => {
@@ -15,6 +31,22 @@ export default function Header() {
       setUserInfo(null)
     }
   })
+  const { data: cartInfo } = useQuery({
+    queryKey: ['purchases', -1],
+    queryFn: () => purchasesApi.getCart(-1)
+  })
+  console.log(cartInfo?.data.data.length)
+
+  const onSubmit = (data: FormData) => {
+    const queryString = new URLSearchParams({
+      ...queryConfig,
+      name: data.name
+    }).toString()
+    return navigate({
+      pathname: router.home,
+      search: `${queryString}`
+    })
+  }
 
   return (
     <div className='bg-primary py-[10px] text-white'>
@@ -112,14 +144,17 @@ export default function Header() {
               </g>
             </svg>
           </Link>
-
-          <form className='flex h-[40px] flex-auto items-center justify-between bg-white p-[10px]'>
+          <form
+            className='flex h-[40px] flex-auto items-center justify-between bg-white p-[10px]'
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <input
               type='text'
               className='w-[90%] border-none text-sm text-black outline-none'
               placeholder='Free ship đến 50%'
+              {...register('name')}
             />
-            <div className='cursor-pointer bg-primary py-2 px-4'>
+            <button type='submit' className='cursor-pointer bg-primary py-2 px-4'>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 fill='none'
@@ -134,65 +169,61 @@ export default function Header() {
                   d='M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z'
                 />
               </svg>
-            </div>
+            </button>
           </form>
           <Popover
             arrowLeft='97%'
             contentElement={
               <div className='rouned-sm max-w-[400px] py-[10px]'>
-                <p className='mb-[20px] px-[10px] text-[18px] text-slate-400'>Sản phẩm mới thêm</p>
-                <div>
-                  <div className='mt-4 flex gap-4 px-[10px] transition-[0.4s] hover:bg-slate-100'>
-                    <img
-                      src='https://images.unsplash.com/photo-1671726203390-4e991d2be397?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1288&q=80'
-                      alt='shopee_image'
-                      className=' h-10 w-8 rounded-sm object-cover'
-                    />
-                    <p className='truncate capitalize'>
-                      Lorem ipsum dolor sit amet consectetur, adipisicing elit. Perferendis eos veniam modi ipsa in
-                      sequi. Possimus hic magni est deleniti et voluptates nulla, similique, suscipit, cum magnam
-                      officia veniam optio.
-                    </p>
-                    <p className='text-primary'>đ224.000</p>
+                {cartInfo && cartInfo.data.data.length > 0 ? (
+                  <>
+                    <p className='mb-[20px] px-[10px] text-[18px] text-stone-300'>Sản phẩm mới thêm</p>
+                    <div>
+                      {cartInfo.data.data.slice(0, 5).map((e) => {
+                        return (
+                          <div
+                            className='mt-4 flex gap-4 py-2 px-[10px] transition-[0.4s] hover:bg-stone-100'
+                            key={e._id}
+                          >
+                            <img
+                              src={e.product.image}
+                              alt={e.product.name}
+                              className=' h-10 w-8 rounded-sm object-cover'
+                            />
+                            <p className='truncate capitalize'>{e.product.name}</p>
+                            <p className='text-primary'>₫{new Intl.NumberFormat('de-DE').format(e.product.price)}</p>
+                          </div>
+                        )
+                      })}
+                    </div>
+                    <div className='mt-[30px] flex items-center justify-between px-[10px]'>
+                      <div>
+                        {cartInfo.data.data.length > 5 ? (
+                          <div className='text-xs'>{cartInfo.data.data.length - 5} đã thêm vào giỏ hàng</div>
+                        ) : (
+                          ''
+                        )}
+                      </div>
+                      <button className='rounded-sm bg-primary py-[10px] px-[15px] text-white transition-[0.4s] hover:bg-[#f05d40]'>
+                        Xem giỏ hàng
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <div className='flex h-[200px] w-[400px] flex-col items-center justify-center'>
+                    <img src={empty_cart} alt='empty_cart' width={100} />
+                    <p className='mt-[20px] text-stone-500'>Chưa có sản phẩm</p>
                   </div>
-                  <div className='mt-4 flex gap-4 px-[10px] transition-[0.4s] hover:bg-slate-100'>
-                    <img
-                      src='https://images.unsplash.com/photo-1671726203390-4e991d2be397?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1288&q=80'
-                      alt='shopee_image'
-                      className=' h-10 w-8 rounded-sm object-cover'
-                    />
-                    <p className='truncate capitalize'>
-                      Lorem ipsum dolor sit amet consectetur, adipisicing elit. Perferendis eos veniam modi ipsa in
-                      sequi. Possimus hic magni est deleniti et voluptates nulla, similique, suscipit, cum magnam
-                      officia veniam optio.
-                    </p>
-                    <p className='text-primary'>đ224.000</p>
-                  </div>
-                  <div className='mt-4 flex gap-4 px-[10px] transition-[0.4s] hover:bg-slate-100'>
-                    <img
-                      src='https://images.unsplash.com/photo-1671726203390-4e991d2be397?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1288&q=80'
-                      alt='shopee_image'
-                      className=' h-10 w-8 rounded-sm object-cover'
-                    />
-                    <p className='truncate capitalize'>
-                      Lorem ipsum dolor sit amet consectetur, adipisicing elit. Perferendis eos veniam modi ipsa in
-                      sequi. Possimus hic magni est deleniti et voluptates nulla, similique, suscipit, cum magnam
-                      officia veniam optio.
-                    </p>
-                    <p className='text-primary'>đ224.000</p>
-                  </div>
-                </div>
-                <div className='flex justify-end pr-[10px]'>
-                  <button className='mt-[30px] rounded-sm bg-primary py-[10px] px-[15px] text-white transition-[0.4s] hover:bg-[#f05d40]'>
-                    Xem giỏ hàng
-                  </button>
-                </div>
+                )}
               </div>
             }
             isOptionPlace
             origin='95%'
           >
-            <Link to='/'>
+            <Link to='/' className='relative'>
+              <div className='absolute top-[-8px] right-[-10px] rounded-full bg-white px-2 text-xs text-primary shadow-sm'>
+                {cartInfo?.data.data.length}
+              </div>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 fill='none'

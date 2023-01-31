@@ -1,5 +1,3 @@
-import { divide } from 'lodash'
-
 export const compareValue = (valueFirst: string, valueSecond: string) => {
   if (valueFirst === valueSecond) {
     return true

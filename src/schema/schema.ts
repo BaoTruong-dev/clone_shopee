@@ -1,3 +1,4 @@
+import { Schema } from 'inspector'
 import * as yup from 'yup'
 
 const schema = yup.object().shape({
@@ -17,7 +18,10 @@ const schema = yup.object().shape({
     .string()
     .required('Vui lòng nhập trường này!')
     .min(6, 'Ít nhất là 6 ký tự')
-    .max(20, 'Nhiều nhất là 20 ký tự')
+    .max(20, 'Nhiều nhất là 20 ký tự'),
+  name: yup.string().trim().required()
 })
+
+export type SchemaType = yup.InferType<typeof schema>
 
 export default schema

@@ -80,7 +80,3 @@ input::-webkit-inner-spin-button {
 input[type='number'] {
   -moz-appearance: textfield;
 }
-.data-floating-ui-portal {
-  position: relative;
-  z-index: 99999;
-}

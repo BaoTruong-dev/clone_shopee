@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom'
 import MainButton from 'src/components/MainButton/MainButton'
 import { router } from 'src/constant/router'
 import { Category } from 'src/types/category.type'
-import { ConfigURL } from '../Home'
 import _ from 'lodash'
 import { useState } from 'react'
 import StarFilter from 'src/components/StarFilter/StarFilter'
+import { ConfigURL } from 'src/hooks/useQueryConfig'
 
 interface AsideFilterProps {
   queryConfig: ConfigURL
@@ -34,6 +34,7 @@ export default function AsideFilter({ queryConfig, categories }: AsideFilterProp
   const handleQueryString = (key: string, value: string) => {
     const queryString = new URLSearchParams({
       ...queryConfig,
+      page: '1',
       [key]: value
     }).toString()
     return navigate({
@@ -48,6 +49,7 @@ export default function AsideFilter({ queryConfig, categories }: AsideFilterProp
       }
       const queryString = new URLSearchParams({
         ...queryConfig,
+        page: '1',
         price_max: priceFilter.maxPrice.toString(),
         price_min: priceFilter.minPrice.toString()
       }).toString()

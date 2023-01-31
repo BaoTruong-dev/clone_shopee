@@ -1,13 +1,14 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { router } from 'src/constant/router'
-import { ConfigURL } from 'src/pages/Home/Home'
+import { ConfigURL } from 'src/hooks/useQueryConfig'
 
 export default function StarFilter({ queryConfig }: { queryConfig: ConfigURL }) {
   const navigate = useNavigate()
   const handleFilterStar = (star: string) => {
     const queryString = new URLSearchParams({
       ...queryConfig,
+      page: '1',
       rating_filter: star
     }).toString()
     return navigate({

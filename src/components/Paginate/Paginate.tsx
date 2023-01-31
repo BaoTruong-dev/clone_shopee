@@ -1,8 +1,7 @@
 import classNames from 'classnames'
 import { Link } from 'react-router-dom'
-import { ConfigURL } from 'src/pages/Home/Home'
+import { ConfigURL } from 'src/hooks/useQueryConfig'
 import { router } from '../../constant/router'
-import { number } from 'yup'
 
 interface PaginateProps {
   queryConfig: ConfigURL

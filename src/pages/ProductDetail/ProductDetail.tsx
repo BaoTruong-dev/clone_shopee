@@ -1,22 +1,27 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import classNames from 'classnames'
 import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { productApi } from 'src/apis/product.api'
+import { purchasesApi } from 'src/apis/purchases.api'
 import MainButton from 'src/components/MainButton/MainButton'
 import ProductItem from 'src/components/ProductItem/ProductItem'
+import QuantityController from 'src/components/QuantityController/QuantityController'
 import Star from 'src/components/Star/Star'
+import { queryClient } from 'src/main'
+import { PurchasesAddItem } from 'src/types/purchases.type'
 import { handlePercent } from 'src/utils/utils'
 export default function ProductDetail() {
+  const [quantity, setQuantity] = useState<number>(1)
   const [slideRange, setSlideRange] = useState<number[]>([0, 5])
   const [activeImage, setActiveImage] = useState<string>('')
   const imageZoomRef = useRef<HTMLImageElement>(null)
   const { id } = useParams()
-
+  const _id = id?.split(',')[1] as string
   const { data: productInfo } = useQuery({
     queryKey: ['product', id],
     queryFn: () => {
-      return productApi.getProductDetail(id?.split(',')[1] as string)
+      return productApi.getProductDetail(_id)
     },
     keepPreviousData: true
   })
@@ -28,13 +33,26 @@ export default function ProductDetail() {
       return productApi.getProducts({ category: product?.category._id })
     }
   })
+  const addToCartMutation = useMutation({
+    mutationFn: (formData: PurchasesAddItem) => {
+      return purchasesApi.addToCart(formData)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['purchases', -1] })
+    }
+  })
 
   useEffect(() => {
     if (product) {
       setActiveImage(product?.images[0])
     }
   }, [product])
-
+  const handleAddToCard = (quantity: number, id: string) => {
+    return addToCartMutation.mutate({
+      product_id: id,
+      buy_count: quantity
+    })
+  }
   const handleHoverZoom = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const image = imageZoomRef.current as HTMLImageElement
     const x = e.clientX - e.currentTarget.offsetLeft
@@ -155,43 +173,15 @@ export default function ProductDetail() {
               </div>
             </div>
             <div className='h0fu mt-[30px] flex h-[32px] items-center'>
-              <p className='text-sm text-[#757575]'>Số Lượng</p>
-              <div className='ml-[40px] mr-[15px] flex h-full items-center'>
-                <button className='h-full border border-black/10 p-[5px]'>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    fill='none'
-                    viewBox='0 0 24 24'
-                    strokeWidth={1.5}
-                    stroke='currentColor'
-                    className='h-5 w-5'
-                  >
-                    <path strokeLinecap='round' strokeLinejoin='round' d='M18 12H6' />
-                  </svg>
-                </button>
-                <div className='flex h-full items-center justify-center border border-r-0 border-l-0 border-black/10 px-[10px]'>
-                  500
-                </div>
-                <button className='h-full  border border-black/10 p-[5px]'>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    fill='none'
-                    viewBox='0 0 24 24'
-                    strokeWidth={1.5}
-                    stroke='currentColor'
-                    className='h-5 w-5'
-                  >
-                    <path strokeLinecap='round' strokeLinejoin='round' d='M12 6v12m6-6H6' />
-                  </svg>
-                </button>
-              </div>
-              <div className='flex gap-1 text-sm text-[#757575]'>
+              <p className='mr-[40px] text-sm text-[#757575]'>Số Lượng</p>
+              <QuantityController quantity={quantity} setQuantity={setQuantity} max={product.quantity} />
+              <div className='ml-[15px] flex gap-1 text-sm text-[#757575]'>
                 <p>{product.quantity}</p>
                 <p>sản phẩm có sẵn</p>
               </div>
             </div>
             <div className='mt-[30px] flex items-center gap-4'>
-              <MainButton className='border border-primary bg-[#feebe5] '>
+              <MainButton className='border border-primary bg-[#feebe5]' onClick={() => handleAddToCard(quantity, _id)}>
                 <div className='flex items-center text-[#ee4d2d]'>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
