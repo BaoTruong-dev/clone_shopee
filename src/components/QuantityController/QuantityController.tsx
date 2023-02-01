@@ -1,42 +1,44 @@
 import { useState } from 'react'
+import { PurchasesAddItem } from 'src/types/purchases.type'
 
 interface QuantityProps {
   quantity: number
-  setQuantity: React.Dispatch<React.SetStateAction<number>>
   max?: number
+  handleFunc: ((data: PurchasesAddItem) => void) | ((amount: number) => void)
 }
 
-export default function QuantityController({ quantity, max, setQuantity }: QuantityProps) {
+export default function QuantityController({ quantity, max, handleFunc }: QuantityProps) {
   const handleChangeInput = (e: React.FormEvent<HTMLInputElement>) => {
     const value = Number(e.currentTarget.value)
     if (max) {
       if (value > max) {
-        setQuantity(max)
+        handleFunc(max)
         return
       }
     }
     if (value === 0) {
-      setQuantity(1)
+      handleFunc(1)
       return
     }
-    setQuantity(value)
+    handleFunc(value)
   }
   const handleIncreaseQuantity = () => {
+    handleFunc
     if (max) {
       if (quantity < max) {
-        setQuantity((prev) => prev + 1)
+        handleFunc(quantity + 1)
       }
     } else {
-      setQuantity((prev) => prev + 1)
+      handleFunc(quantity + 1)
     }
   }
   const handleDecreaseQuantity = () => {
     if (quantity > 1) {
-      setQuantity((prev) => prev - 1)
+      handleFunc(quantity - 1)
     }
   }
   return (
-    <div className='flex h-full items-center'>
+    <div className='flex h-[32px] items-center'>
       <button className='h-full border border-black/10 p-[5px]' onClick={handleDecreaseQuantity}>
         <svg
           xmlns='http://www.w3.org/2000/svg'

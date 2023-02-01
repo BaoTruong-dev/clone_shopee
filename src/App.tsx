@@ -6,6 +6,7 @@ import { router } from './constant/router'
 import { AuthContext } from './context/auth.context'
 import AuthLayout from './layouts/AuthLayout/AuthLayout'
 import MainLayout from './layouts/MainLayout/MainLayout'
+import Cart from './pages/Cart/Cart'
 import Home from './pages/Home/Home'
 import Login from './pages/Login/Login'
 import ProductDetail from './pages/ProductDetail/ProductDetail'
@@ -52,6 +53,10 @@ function App() {
             {
               path: router.profile,
               element: <Profile />
+            },
+            {
+              path: router.cart,
+              element: <Cart />
             }
           ]
         }

@@ -23,6 +23,7 @@ export default function ProductDetail() {
     queryFn: () => {
       return productApi.getProductDetail(_id)
     },
+    staleTime: 3 * 60 * 1000,
     keepPreviousData: true
   })
   const product = productInfo?.data.data
@@ -31,7 +32,9 @@ export default function ProductDetail() {
     queryKey: ['product_relative', product?.category._id, id],
     queryFn: () => {
       return productApi.getProducts({ category: product?.category._id })
-    }
+    },
+    staleTime: 3 * 60 * 1000,
+    keepPreviousData: true
   })
   const addToCartMutation = useMutation({
     mutationFn: (formData: PurchasesAddItem) => {
@@ -52,6 +55,9 @@ export default function ProductDetail() {
       product_id: id,
       buy_count: quantity
     })
+  }
+  const handleQuantityFunc = (amount: number) => {
+    setQuantity(amount)
   }
   const handleHoverZoom = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const image = imageZoomRef.current as HTMLImageElement
@@ -174,7 +180,7 @@ export default function ProductDetail() {
             </div>
             <div className='h0fu mt-[30px] flex h-[32px] items-center'>
               <p className='mr-[40px] text-sm text-[#757575]'>Số Lượng</p>
-              <QuantityController quantity={quantity} setQuantity={setQuantity} max={product.quantity} />
+              <QuantityController quantity={quantity} max={product.quantity} handleFunc={handleQuantityFunc} />
               <div className='ml-[15px] flex gap-1 text-sm text-[#757575]'>
                 <p>{product.quantity}</p>
                 <p>sản phẩm có sẵn</p>

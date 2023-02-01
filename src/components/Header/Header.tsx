@@ -11,6 +11,7 @@ import schema, { SchemaType } from 'src/schema/schema'
 import { router } from '../../constant/router'
 import empty_cart from '../../assets/cart.png'
 import Popover from '../Popover/Popover'
+import { queryClient } from 'src/main'
 
 const schemaName = schema.pick(['name'])
 type FormData = Pick<SchemaType, 'name'>
@@ -29,13 +30,15 @@ export default function Header() {
     onSuccess: () => {
       setIsAuthenticated(false)
       setUserInfo(null)
+      queryClient.removeQueries({ queryKey: ['purchases', { status: -1 }] })
     }
   })
   const { data: cartInfo } = useQuery({
-    queryKey: ['purchases', -1],
-    queryFn: () => purchasesApi.getCart(-1)
+    queryKey: ['purchases', { status: -1 }],
+    queryFn: () => purchasesApi.getCart(-1),
+    enabled: isAuthenticated,
+    staleTime: Infinity
   })
-  console.log(cartInfo?.data.data.length)
 
   const onSubmit = (data: FormData) => {
     const queryString = new URLSearchParams({
@@ -100,7 +103,7 @@ export default function Header() {
                   <Link to='/profile' className='p-[10px] hover:bg-slate-100 hover:text-secondary'>
                     Tài khoản của tôi
                   </Link>
-                  <Link to='#' className='p-[10px]  hover:bg-slate-100 hover:text-secondary'>
+                  <Link to='/cart' className='p-[10px]  hover:bg-slate-100 hover:text-secondary'>
                     Đơn mua
                   </Link>
                   <Link

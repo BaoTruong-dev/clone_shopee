@@ -3,5 +3,6 @@ export const router = {
   login: '/login',
   register: '/register',
   profile: '/profile',
-  productDetail: ':id'
+  productDetail: ':id',
+  cart: '/cart'
 }
