@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import classNames from 'classnames'
-import { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { productApi } from 'src/apis/product.api'
 import { purchasesApi } from 'src/apis/purchases.api'
@@ -41,7 +41,7 @@ export default function ProductDetail() {
       return purchasesApi.addToCart(formData)
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['purchases', -1] })
+      queryClient.invalidateQueries({ queryKey: ['purchases', { status: -1 }] })
     }
   })
 
@@ -56,9 +56,11 @@ export default function ProductDetail() {
       buy_count: quantity
     })
   }
-  const handleQuantityFunc = (amount: number) => {
-    setQuantity(amount)
+
+  const handleQuantity = (data: number) => {
+    setQuantity(data)
   }
+
   const handleHoverZoom = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const image = imageZoomRef.current as HTMLImageElement
     const x = e.clientX - e.currentTarget.offsetLeft
@@ -180,7 +182,12 @@ export default function ProductDetail() {
             </div>
             <div className='h0fu mt-[30px] flex h-[32px] items-center'>
               <p className='mr-[40px] text-sm text-[#757575]'>Số Lượng</p>
-              <QuantityController quantity={quantity} max={product.quantity} handleFunc={handleQuantityFunc} />
+              <QuantityController
+                quantity={quantity}
+                max={product.quantity}
+                handleQuantity={handleQuantity}
+                handleOnType={handleQuantity}
+              />
               <div className='ml-[15px] flex gap-1 text-sm text-[#757575]'>
                 <p>{product.quantity}</p>
                 <p>sản phẩm có sẵn</p>

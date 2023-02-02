@@ -1,57 +1,64 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
-import React, { useEffect, useMemo } from 'react'
-import { useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
 import produce from 'immer'
+import _ from 'lodash'
+import React, { useContext, useMemo, useRef } from 'react'
 import { purchasesApi } from 'src/apis/purchases.api'
 import MainButton from 'src/components/MainButton/MainButton'
 import QuantityController from 'src/components/QuantityController/QuantityController'
-import { PurchasesAddItem, PurchasesCart } from 'src/types/purchases.type'
-
-interface PurchasesCartExtended extends PurchasesCart {
-  disabled: boolean
-  checked: boolean
-}
-
+import { PurchasesContext } from 'src/context/purchasesCart.context'
+import { PurchasesAddItem, PurchasesCartExtended } from 'src/types/purchases.type'
 export default function Cart() {
-  const [cartPurchaseList, setCartPurchaseList] = useState<PurchasesCartExtended[]>([])
-  const { data: cartPurchase } = useQuery({
-    queryKey: ['purchases', { status: -1 }],
-    queryFn: () => purchasesApi.getCart(-1),
-    staleTime: Infinity
-  })
+  const { purchasesCart, setPurchasesCart, quantityOnType, setQuantityOnType, refetch } = useContext(PurchasesContext)
+  const timer = useRef<NodeJS.Timeout | number>(0)
+  const quantityOnTypeValue = useMemo(() => quantityOnType, [quantityOnType])
   const updateCartMutation = useMutation({
     mutationFn: (data: PurchasesAddItem) => purchasesApi.updateCart(data),
-    onSuccess: () => {}
+    onSuccess: () => {
+      refetch()
+    }
   })
-  useEffect(() => {
-    cartPurchase &&
-      setCartPurchaseList(
-        cartPurchase.data.data.map((e) => {
-          return {
-            ...e,
-            disabled: false,
-            checked: false
-          }
-        })
-      )
-  }, [cartPurchase])
-  const isCheckedAll = useMemo<boolean>(() => cartPurchaseList.every((e) => e.checked), [cartPurchaseList])
+
+  const isCheckedAll = useMemo<boolean>(() => purchasesCart?.every((e) => e.checked), [purchasesCart])
   const cartPurchaseCheckedList = useMemo<PurchasesCartExtended[]>(
-    () => cartPurchaseList.filter((e) => e.checked),
-    [cartPurchaseList]
+    () => purchasesCart.filter((e) => e.checked),
+    [purchasesCart]
   )
   const totalMoney = useMemo<number>(
-    () => cartPurchaseCheckedList.reduce((initial, value) => (initial += value.price * value.buy_count), 0),
+    () => cartPurchaseCheckedList?.reduce((initial, value) => (initial += value.price * value.buy_count), 0),
     [cartPurchaseCheckedList]
   )
   const totalMoneyDiscount = useMemo<number>(
     () =>
-      cartPurchaseCheckedList.reduce((initial, value) => (initial += value.price_before_discount * value.buy_count), 0),
+      cartPurchaseCheckedList?.reduce(
+        (initial, value) => (initial += (value.price_before_discount - value.price) * value.buy_count),
+        0
+      ),
     [cartPurchaseCheckedList]
   )
+  const handleQuantity = (id: string) => (data: number) => {
+    updateCartMutation.mutate({
+      product_id: id,
+      buy_count: data
+    })
+  }
+  const handleOnType = (id: string, index: number) => (data: number) => {
+    clearTimeout(timer.current)
+    setQuantityOnType((prev) => {
+      const clone = _.cloneDeep(prev)
+      clone[index] = data
+      return clone
+    })
+    timer.current = setTimeout(() => {
+      updateCartMutation.mutate({
+        product_id: id,
+        buy_count: data
+      })
+    }, 300)
+  }
+
   const handleChangeCheckedAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.currentTarget.checked
-    setCartPurchaseList((prev) => {
+    setPurchasesCart((prev) => {
       return prev.map((e) => {
         return {
           ...e,
@@ -60,12 +67,10 @@ export default function Cart() {
       })
     })
   }
-  const handleQuantityFunc = (data: PurchasesAddItem) => {
-    updateCartMutation.mutate(data)
-  }
+
   const handleChangeChecked = (index: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.currentTarget.checked
-    setCartPurchaseList((prev) => {
+    setPurchasesCart((prev) => {
       return produce(prev, (draft) => {
         draft[index].checked = value
       })
@@ -93,8 +98,8 @@ export default function Cart() {
             </div>
           </div>
         </div>
-        {cartPurchaseList &&
-          cartPurchaseList.map((e, index) => {
+        {purchasesCart &&
+          purchasesCart.map((e, index) => {
             return (
               <div key={e._id} className='mb-4 rounded-sm px-3 py-6 text-sm shadow-md'>
                 <div className=' grid grid-cols-12 border border-stone-200 px-5 py-4'>
@@ -125,8 +130,9 @@ export default function Cart() {
                       <div className='col-span-1 flex items-center justify-center'>
                         <QuantityController
                           max={e.product.quantity}
-                          quantity={e.buy_count}
-                          handleFunc={handleQuantityFunc as () => void}
+                          quantity={quantityOnTypeValue[index]}
+                          handleQuantity={handleQuantity(e.product._id)}
+                          handleOnType={handleOnType(e.product._id, index)}
                         />
                       </div>
                       <div className='col-span-1 flex items-center justify-center text-primary'>
@@ -148,7 +154,7 @@ export default function Cart() {
                 checked={isCheckedAll}
                 onChange={handleChangeCheckedAll}
               />
-              <div className='text-[16px]'>Chọn Tất Cả ({cartPurchaseList?.length})</div>
+              <div className='text-[16px]'>Chọn Tất Cả ({purchasesCart.length})</div>
               <div className='text-[16px]'>Xoá</div>
             </div>
           </div>

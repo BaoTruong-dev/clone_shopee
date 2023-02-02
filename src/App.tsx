@@ -17,10 +17,6 @@ function App() {
   const { isAuthenticated } = useContext(AuthContext)
   const isMutating = useIsMutating()
   const isFetching = useIsFetching()
-  const param = useLocation()
-  useEffect(() => {
-    window.scrollTo({ top: 0 })
-  }, [param.pathname])
   function ProtectedRoute() {
     return isAuthenticated ? <Outlet /> : <Navigate to={router.login} />
   }

@@ -207,9 +207,12 @@ export default function Header() {
                           ''
                         )}
                       </div>
-                      <button className='rounded-sm bg-primary py-[10px] px-[15px] text-white transition-[0.4s] hover:bg-[#f05d40]'>
+                      <Link
+                        to='/cart'
+                        className='rounded-sm bg-primary py-[10px] px-[15px] text-white transition-[0.4s] hover:bg-[#f05d40]'
+                      >
                         Xem giỏ hàng
-                      </button>
+                      </Link>
                     </div>
                   </>
                 ) : (

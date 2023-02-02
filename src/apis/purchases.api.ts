@@ -16,6 +16,6 @@ export const purchasesApi = {
     })
   },
   updateCart: (data: PurchasesAddItem) => {
-    return http.post<ResponseApi<PurchasesCart>>(`${URL}/update-purchase`, data)
+    return http.put<ResponseApi<PurchasesCart>>(`${URL}/update-purchase`, data)
   }
 }

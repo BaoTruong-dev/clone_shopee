@@ -1,40 +1,32 @@
-import { useState } from 'react'
-import { PurchasesAddItem } from 'src/types/purchases.type'
+import { useDeferredValue } from 'react'
 
 interface QuantityProps {
   quantity: number
-  max?: number
-  handleFunc: ((data: PurchasesAddItem) => void) | ((amount: number) => void)
+  max: number
+  handleQuantity: (data: number) => void
+  handleOnType: (data: number) => void
 }
 
-export default function QuantityController({ quantity, max, handleFunc }: QuantityProps) {
+export default function QuantityController({ quantity, max, handleQuantity, handleOnType }: QuantityProps) {
   const handleChangeInput = (e: React.FormEvent<HTMLInputElement>) => {
     const value = Number(e.currentTarget.value)
-    if (max) {
-      if (value > max) {
-        handleFunc(max)
-        return
-      }
-    }
-    if (value === 0) {
-      handleFunc(1)
-      return
-    }
-    handleFunc(value)
-  }
-  const handleIncreaseQuantity = () => {
-    handleFunc
-    if (max) {
-      if (quantity < max) {
-        handleFunc(quantity + 1)
-      }
+    if (value >= max) {
+      handleOnType(max)
+    } else if (value <= 0) {
+      handleOnType(1)
     } else {
-      handleFunc(quantity + 1)
+      handleOnType(value)
+    }
+  }
+
+  const handleIncreaseQuantity = () => {
+    if (quantity < max) {
+      handleQuantity(quantity + 1)
     }
   }
   const handleDecreaseQuantity = () => {
     if (quantity > 1) {
-      handleFunc(quantity - 1)
+      handleQuantity(quantity - 1)
     }
   }
   return (

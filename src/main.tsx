@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import App from './App'
 // eslint-disable-next-line import/no-unresolved
 import { AuthProvider } from './context/auth.context'
+import { PurchasesProvider } from './context/purchasesCart.context'
 import './index.css'
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,7 +22,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <App />
+          <PurchasesProvider>
+            <App />
+          </PurchasesProvider>
         </AuthProvider>
         <ToastContainer autoClose={2000} />
         <ReactQueryDevtools initialIsOpen={false} />
