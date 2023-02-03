@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { createContext, useLayoutEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { purchasesApi } from 'src/apis/purchases.api'
 import { PurchasesCartExtended } from 'src/types/purchases.type'
 interface PurchasesContextInterface {
@@ -21,6 +22,7 @@ const initialAuthValue: PurchasesContextInterface = {
 export const PurchasesContext = createContext<PurchasesContextInterface>(initialAuthValue)
 
 export const PurchasesProvider = ({ children }: { children: React.ReactNode }) => {
+  const { state } = useLocation()
   const { data: cartPurchase, refetch } = useQuery({
     queryKey: ['purchases', { status: -1 }],
     queryFn: () => purchasesApi.getCart(-1),
@@ -41,12 +43,12 @@ export const PurchasesProvider = ({ children }: { children: React.ReactNode }) =
           return {
             ...e,
             disabled: false,
-            checked: false
+            checked: e.product._id === state
           }
         })
       )
     }
-  }, [cartPurchase])
+  }, [cartPurchase, state])
   return (
     <PurchasesContext.Provider value={{ purchasesCart, setPurchasesCart, quantityOnType, setQuantityOnType, refetch }}>
       {children}

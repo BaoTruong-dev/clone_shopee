@@ -1,6 +1,6 @@
+import axios, { AxiosHeaders, AxiosInstance } from 'axios'
 import { clearDataLS, getAccessTokenLS } from 'src/utils/auth.ls'
 import { saveAccessTokenLS, saveUserInfoLS } from './auth.ls'
-import axios, { AxiosHeaders, AxiosInstance } from 'axios'
 
 class Http {
   instance: AxiosInstance
@@ -36,9 +36,15 @@ class Http {
         } else if (response.config.url === 'logout') {
           clearDataLS()
         }
+
         return response
       },
-      function (error) {
+      function (error: any) {
+        if (error.response.status === 401) {
+          const ToKenExpired = new Event('token_expired')
+          document.dispatchEvent(ToKenExpired)
+          clearDataLS()
+        }
         return Promise.reject(error)
       }
     )

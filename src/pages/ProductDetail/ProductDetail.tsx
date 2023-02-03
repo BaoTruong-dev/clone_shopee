@@ -1,14 +1,15 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import classNames from 'classnames'
-import React, { useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useContext, useEffect, useRef, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { productApi } from 'src/apis/product.api'
 import { purchasesApi } from 'src/apis/purchases.api'
 import MainButton from 'src/components/MainButton/MainButton'
 import ProductItem from 'src/components/ProductItem/ProductItem'
 import QuantityController from 'src/components/QuantityController/QuantityController'
 import Star from 'src/components/Star/Star'
-import { queryClient } from 'src/main'
+import { AuthContext } from 'src/context/auth.context'
 import { PurchasesAddItem } from 'src/types/purchases.type'
 import { handlePercent } from 'src/utils/utils'
 export default function ProductDetail() {
@@ -16,12 +17,18 @@ export default function ProductDetail() {
   const [slideRange, setSlideRange] = useState<number[]>([0, 5])
   const [activeImage, setActiveImage] = useState<string>('')
   const imageZoomRef = useRef<HTMLImageElement>(null)
+  const queryClient = useQueryClient()
+  const navigate = useNavigate()
+  const { isAuthenticated } = useContext(AuthContext)
   const { id } = useParams()
   const _id = id?.split(',')[1] as string
   const { data: productInfo } = useQuery({
     queryKey: ['product', id],
     queryFn: () => {
       return productApi.getProductDetail(_id)
+    },
+    onError: () => {
+      navigate('/')
     },
     staleTime: 3 * 60 * 1000,
     keepPreviousData: true
@@ -51,12 +58,39 @@ export default function ProductDetail() {
     }
   }, [product])
   const handleAddToCard = (quantity: number, id: string) => {
-    return addToCartMutation.mutate({
-      product_id: id,
-      buy_count: quantity
-    })
+    if (isAuthenticated) {
+      return addToCartMutation.mutate(
+        {
+          product_id: id,
+          buy_count: quantity
+        },
+        {
+          onSuccess: () => {
+            toast.success('Đã thêm vào giỏ hàng')
+          }
+        }
+      )
+    } else {
+      navigate('/login')
+    }
   }
-
+  const handleBuyNow = (quantity: number, id: string) => {
+    if (isAuthenticated) {
+      return addToCartMutation.mutate(
+        {
+          product_id: id,
+          buy_count: quantity
+        },
+        {
+          onSuccess: () => {
+            navigate('/cart', { state: id })
+          }
+        }
+      )
+    } else {
+      navigate('/login')
+    }
+  }
   const handleQuantity = (data: number) => {
     setQuantity(data)
   }
@@ -213,7 +247,9 @@ export default function ProductDetail() {
                   <p>Thêm Vào Giỏ Hàng</p>
                 </div>
               </MainButton>
-              <MainButton className='border border-primary'>Mua ngay</MainButton>
+              <MainButton className='border border-primary' onClick={() => handleBuyNow(quantity, _id)}>
+                Mua ngay
+              </MainButton>
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
@@ -11,12 +11,12 @@ import schema, { SchemaType } from 'src/schema/schema'
 import { router } from '../../constant/router'
 import empty_cart from '../../assets/cart.png'
 import Popover from '../Popover/Popover'
-import { queryClient } from 'src/main'
 
 const schemaName = schema.pick(['name'])
 type FormData = Pick<SchemaType, 'name'>
 export default function Header() {
   const { userInfo, setIsAuthenticated, setUserInfo, isAuthenticated } = useContext(AuthContext)
+  const queryClient = useQueryClient()
   const navigate = useNavigate()
   const { register, handleSubmit } = useForm({
     defaultValues: {
@@ -100,7 +100,7 @@ export default function Header() {
             <Popover
               contentElement={
                 <div className='flex flex-col '>
-                  <Link to='/profile' className='p-[10px] hover:bg-slate-100 hover:text-secondary'>
+                  <Link to={router.user} className='p-[10px] hover:bg-slate-100 hover:text-secondary'>
                     Tài khoản của tôi
                   </Link>
                   <Link to='/cart' className='p-[10px]  hover:bg-slate-100 hover:text-secondary'>
@@ -218,7 +218,7 @@ export default function Header() {
                 ) : (
                   <div className='flex h-[200px] w-[400px] flex-col items-center justify-center'>
                     <img src={empty_cart} alt='empty_cart' width={100} />
-                    <p className='mt-[20px] text-stone-500'>Chưa có sản phẩm</p>
+                    <p className='mt-[20px] text-stone-400'>Chưa có sản phẩm</p>
                   </div>
                 )}
               </div>
@@ -228,7 +228,7 @@ export default function Header() {
           >
             <Link to='/' className='relative'>
               <div className='absolute top-[-8px] right-[-10px] rounded-full bg-white px-2 text-xs text-primary shadow-sm'>
-                {cartInfo?.data.data.length}
+                {cartInfo && cartInfo.data.data.length > 0 && cartInfo.data.data.length}
               </div>
               <svg
                 xmlns='http://www.w3.org/2000/svg'

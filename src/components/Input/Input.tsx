@@ -1,3 +1,4 @@
+import classNames from 'classnames'
 import React, { forwardRef } from 'react'
 interface InputProps {
   placeHover?: string
@@ -7,14 +8,16 @@ interface InputProps {
   name?: string
   onChange?: (e: React.FormEvent<HTMLInputElement>) => void
   onBlur?: (e: React.FormEvent<HTMLInputElement>) => void
+  hiddenError?: boolean
+  className?: string
 }
 
 function Input(
-  { placeHover, type = 'text', label, error, ...rest }: InputProps,
+  { placeHover, type = 'text', label, error, hiddenError, className, ...rest }: InputProps,
   ref: React.LegacyRef<HTMLInputElement> | undefined
 ) {
   return (
-    <label className='mb-[10px] block'>
+    <label className={`mb-[10px] block ${className}`}>
       {label && <div>{label}</div>}
       <input
         {...rest}
@@ -23,7 +26,7 @@ function Input(
         placeholder={placeHover}
         className='w-full rounded-[2px] border py-[10px] px-[15px] text-[14px] focus:outline-gray-400'
       />
-      {<p className='min-h-[22px] text-[12px] text-red-600'>{error}</p>}
+      <p className={classNames('min-h-[22px] text-[12px] text-red-600', { hidden: hiddenError })}>{error}</p>
     </label>
   )
 }

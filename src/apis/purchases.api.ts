@@ -5,9 +5,6 @@ import { ResponseApi } from 'src/types/utils.type'
 const URL = 'purchases'
 
 export const purchasesApi = {
-  addToCart: (data: PurchasesAddItem) => {
-    return http.post<ResponseApi<PurchasesCart>>(`${URL}/add-to-cart`, data)
-  },
   getCart: (status: PurchasesStatus) => {
     return http.get<ResponseApi<PurchasesCart[]>>(URL, {
       params: {
@@ -15,7 +12,18 @@ export const purchasesApi = {
       }
     })
   },
+  addToCart: (data: PurchasesAddItem) => {
+    return http.post<ResponseApi<PurchasesCart>>(`${URL}/add-to-cart`, data)
+  },
   updateCart: (data: PurchasesAddItem) => {
     return http.put<ResponseApi<PurchasesCart>>(`${URL}/update-purchase`, data)
+  },
+  buyCart: (data: PurchasesAddItem[]) => {
+    return http.post<ResponseApi<PurchasesCart>>(`${URL}/buy-products`, data)
+  },
+  deleteCart: (data: string[]) => {
+    return http.delete<ResponseApi<{ deleted_count: number }>>(`${URL}`, {
+      data
+    })
   }
 }

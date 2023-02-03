@@ -10,10 +10,11 @@ import App from './App'
 import { AuthProvider } from './context/auth.context'
 import { PurchasesProvider } from './context/purchasesCart.context'
 import './index.css'
-export const queryClient = new QueryClient({
+const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: false // default: true
+      refetchOnWindowFocus: false,
+      retry: false // default: true
     }
   }
 })

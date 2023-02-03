@@ -17,13 +17,16 @@ export default function Home() {
     queryFn: () => {
       return productApi.getProducts(queryConfig as ProductURL)
     },
+    staleTime: 30 * 60 * 1000,
     keepPreviousData: true
   })
   const { data: categoryData } = useQuery({
     queryKey: ['category'],
     queryFn: () => {
       return category.getCategories()
-    }
+    },
+    staleTime: 30 * 60 * 1000,
+    keepPreviousData: true
   })
   if (!productsData) return null
   return (
