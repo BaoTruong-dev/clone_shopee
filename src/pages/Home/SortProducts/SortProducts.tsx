@@ -3,8 +3,8 @@ import classNames from 'classnames'
 import { useNavigate } from 'react-router-dom'
 import MainButton from 'src/components/MainButton/MainButton'
 import { router } from 'src/constant/router'
+import { ConfigURL } from '../Home'
 import _ from 'lodash'
-import { ConfigURL } from 'src/hooks/useQueryConfig'
 interface SortProps {
   queryConfig: ConfigURL
   pageSize: number

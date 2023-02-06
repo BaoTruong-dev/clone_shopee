@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
 import classNames from 'classnames'
 import { useContext, useEffect } from 'react'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import userApi from 'src/apis/user.api'
 import Input from 'src/components/Input/Input'
@@ -13,7 +13,6 @@ import { User } from 'src/types/user.type'
 import { saveUserInfoLS } from 'src/utils/auth.ls'
 import { getUrlAvatar } from 'src/utils/utils'
 import DateSelect from '../DateSelect/DateSelect'
-import { ResponseApi } from '../../../../types/utils.type'
 
 export type dataUpdate = Pick<UserSchemaType, 'address' | 'date_of_birth' | 'name' | 'phone' | 'avatar'>
 const schema = userSchema.omit(['password', 'new_password', 'confirm_new_password'])
@@ -23,7 +22,6 @@ export default function Profile() {
   const {
     register,
     handleSubmit,
-    control,
     formState: { errors, isDirty }
   } = useForm<dataUpdate>({
     defaultValues: {
@@ -40,8 +38,8 @@ export default function Profile() {
     mutationFn: (data: dataUpdate) => {
       return userApi.updateUser(data)
     },
-    onSuccess: ({ data }: { data: ResponseApi<User> }) => {
-      saveUserInfoLS(data.data)
+    onSuccess: (data) => {
+      saveUserInfoLS(data.data.data)
       toast.success('Cập nhật thông tin thành công!')
     }
   })
@@ -79,16 +77,7 @@ export default function Profile() {
           </div>
           <div className='mb-[10px] flex items-center gap-6'>
             <p className='w-[15%] text-right text-gray-500'>Ngày Sinh</p>
-            <Controller
-              control={control}
-              name='date_of_birth'
-              render={({ field: { onChange, value } }) => (
-                <DateSelect
-                  value={value as unknown as string}
-                  onChange={onChange} // send value to hook form
-                />
-              )}
-            />
+            <DateSelect value={userInfo?.date_of_birth as unknown as string} />
           </div>
           <div className='my-[30px] flex items-center gap-6'>
             <p className='w-[15%]'></p>
