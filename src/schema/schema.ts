@@ -22,6 +22,23 @@ const schema = yup.object().shape({
   name: yup.string().trim().required()
 })
 
+export const userSchema = yup.object().shape({
+  address: yup.string().max(160, 'Tối đa là 160 ký tự'),
+  date_of_birth: yup.date(),
+  name: yup.string().max(160, 'Tối đa là 160 ký tự'),
+  phone: yup.string().max(20, 'Tối đa là 20 ký tự'),
+  avatar: yup.string().max(160, 'Tối đa là 160 ký tự'),
+  password: schema.fields['password'],
+  new_password: schema.fields['password'],
+  confirm_new_password: yup
+    .string()
+    .required('Nhập lại password là bắt buộc')
+    .min(6, 'Độ dài từ 6 - 160 ký tự')
+    .max(160, 'Độ dài từ 6 - 160 ký tự')
+    .oneOf([yup.ref('new_password')], 'Nhập lại password không khớp')
+})
+
 export type SchemaType = yup.InferType<typeof schema>
+export type UserSchemaType = yup.InferType<typeof userSchema>
 
 export default schema

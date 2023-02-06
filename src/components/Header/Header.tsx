@@ -11,11 +11,13 @@ import schema, { SchemaType } from 'src/schema/schema'
 import { router } from '../../constant/router'
 import empty_cart from '../../assets/cart.png'
 import Popover from '../Popover/Popover'
+import userApi from 'src/apis/user.api'
+import { getUrlAvatar } from 'src/utils/utils'
 
 const schemaName = schema.pick(['name'])
 type FormData = Pick<SchemaType, 'name'>
 export default function Header() {
-  const { userInfo, setIsAuthenticated, setUserInfo, isAuthenticated } = useContext(AuthContext)
+  const { setIsAuthenticated, setUserInfo, isAuthenticated } = useContext(AuthContext)
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const { register, handleSubmit } = useForm({
@@ -39,7 +41,12 @@ export default function Header() {
     enabled: isAuthenticated,
     staleTime: Infinity
   })
-
+  const { data: dataUser } = useQuery({
+    queryKey: ['me'],
+    queryFn: userApi.getUser,
+    staleTime: Infinity
+  })
+  const userInfo = dataUser?.data.data
   const onSubmit = (data: FormData) => {
     const queryString = new URLSearchParams({
       ...queryConfig,
@@ -118,7 +125,7 @@ export default function Header() {
             >
               <div className='flex items-center duration-200  hover:opacity-75'>
                 <img
-                  src='https://images.unsplash.com/photo-1672394423014-e0354d75b123?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1287&q=80'
+                  src={getUrlAvatar(userInfo?.avatar)}
                   alt='avatar'
                   className='h-[20px] w-[20px] overflow-hidden rounded-full'
                 />

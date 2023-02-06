@@ -27,7 +27,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
             <App />
           </PurchasesProvider>
         </AuthProvider>
-        <ToastContainer autoClose={2000} />
+        <ToastContainer autoClose={1000} />
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </BrowserRouter>

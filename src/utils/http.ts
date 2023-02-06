@@ -1,4 +1,5 @@
 import axios, { AxiosHeaders, AxiosInstance } from 'axios'
+import { URL } from 'src/constant/url'
 import { clearDataLS, getAccessTokenLS } from 'src/utils/auth.ls'
 import { saveAccessTokenLS, saveUserInfoLS } from './auth.ls'
 
@@ -8,7 +9,7 @@ class Http {
   constructor() {
     this.accessToken = getAccessTokenLS()
     this.instance = axios.create({
-      baseURL: 'https://api-ecom.duthanhduoc.com/',
+      baseURL: URL,
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json'

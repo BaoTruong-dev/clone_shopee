@@ -5,13 +5,22 @@ import user_icon from '../../../../assets/profile.png'
 import password_icon from '../../../../assets/password.png'
 import cart_icon from '../../../../assets/bill.png'
 import classNames from 'classnames'
+import { useQuery } from '@tanstack/react-query'
+import userApi from 'src/apis/user.api'
+import { getUrlAvatar } from 'src/utils/utils'
 export default function Sidebar() {
   const navigate = useNavigate()
+  const { data } = useQuery({
+    queryKey: ['me'],
+    queryFn: userApi.getUser,
+    staleTime: Infinity
+  })
+  const userInfo = data?.data.data
   return (
     <aside>
       <div className='flex gap-4'>
         <img
-          src='https://images.unsplash.com/photo-1675395576105-204d3d248430?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1287&q=80'
+          src={getUrlAvatar(userInfo?.avatar)}
           alt='avatar'
           className='border-x-gray-300object-cover h-14 w-14 shrink-0 overflow-hidden rounded-full border'
           onClick={() => navigate(router.user)}
