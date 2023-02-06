@@ -90,7 +90,7 @@ export default function Profile() {
               )}
             />
           </div>
-          <div className='my-[20px] my-[30px] flex items-center gap-6'>
+          <div className='my-[30px] flex items-center gap-6'>
             <p className='w-[15%]'></p>
             <div className='flex-grow'>
               <MainButton className={classNames({ 'bg-primary/70': !isDirty })}>Lưu</MainButton>
