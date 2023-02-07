@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
 import classNames from 'classnames'
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import userApi from 'src/apis/user.api'
@@ -18,10 +18,16 @@ export type dataUpdate = Pick<UserSchemaType, 'address' | 'date_of_birth' | 'nam
 const schema = userSchema.omit(['password', 'new_password', 'confirm_new_password'])
 export default function Profile() {
   const { userInfo, setUserInfo } = useContext(AuthContext)
+  const avatarRef = useRef<HTMLInputElement>(null)
+  const [avatarFile, setAvatarFile] = useState<File>()
+  const previewAvatar = useMemo(() => {
+    return avatarFile ? URL.createObjectURL(avatarFile) : ''
+  }, [avatarFile])
 
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isDirty }
   } = useForm<dataUpdate>({
     defaultValues: {
@@ -43,13 +49,31 @@ export default function Profile() {
       toast.success('Cập nhật thông tin thành công!')
     }
   })
-  const handleFormSubmit = (data: dataUpdate) => {
+
+  const uploadAvatarMutation = useMutation({
+    mutationFn: (data: FormData) => {
+      return userApi.uploadAvatar(data)
+    }
+  })
+  const handleFormSubmit = async (data: dataUpdate) => {
     if (isDirty) {
       setUserInfo(data as User)
-      updateUserMutation.mutate(data)
+      if (avatarFile) {
+        const formData = new FormData()
+        formData.append('avatar', avatarFile)
+        const respond = await uploadAvatarMutation.mutateAsync(formData)
+        console.log(respond)
+
+        // setValue('avatar', respond.data.data)
+      }
+      // updateUserMutation.mutate(data)
     }
   }
-
+  const handleChangeAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.currentTarget.files?.[0]
+    setAvatarFile(file)
+    e.currentTarget.value = ''
+  }
   return (
     <div className='text-sm'>
       <div className='h-[68px]'>
@@ -88,10 +112,19 @@ export default function Profile() {
         </div>
         <div className='flex w-[30%] flex-col items-center border-l-[1px] border-stone-100 pl-[50px]'>
           <div className='h-[100px] w-[100px] overflow-hidden rounded-full'>
-            <img src={getUrlAvatar(userInfo?.avatar)} alt='avatar' className='h-full w-full object-cover' />
+            <img
+              src={previewAvatar || getUrlAvatar(userInfo?.avatar)}
+              alt='avatar'
+              className='h-full w-full object-cover'
+            />
           </div>
-          <input type='file' hidden />
-          <button className='my-[20px] border border-stone-200 px-[20px] py-[10px]'>Chọn Ảnh</button>
+          <input type='file' hidden ref={avatarRef} onChange={handleChangeAvatar} accept='.png, .jpg, .jpeg' />
+          <button
+            className='my-[20px] border border-stone-200 px-[20px] py-[10px]'
+            onClick={() => avatarRef.current?.click()}
+          >
+            Chọn Ảnh
+          </button>
           <p className='text-center text-sm text-[#999999]'>Dụng lượng file tối đa 1 MB Định dạng: .JPEG, .PNG</p>
         </div>
       </form>
