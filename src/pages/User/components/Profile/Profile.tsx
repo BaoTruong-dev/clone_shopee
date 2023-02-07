@@ -1,8 +1,8 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
 import classNames from 'classnames'
-import { useContext, useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import { useContext, useMemo, useRef, useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import userApi from 'src/apis/user.api'
 import Input from 'src/components/Input/Input'
@@ -18,21 +18,31 @@ export type dataUpdate = Pick<UserSchemaType, 'address' | 'date_of_birth' | 'nam
 const schema = userSchema.omit(['password', 'new_password', 'confirm_new_password'])
 export default function Profile() {
   const { userInfo, setUserInfo } = useContext(AuthContext)
+  const avatarRef = useRef<HTMLInputElement>(null)
+  const [avatarFile, setAvatarFile] = useState<File>()
 
   const {
     register,
     handleSubmit,
+    setValue,
+
+    control,
     formState: { errors, isDirty }
   } = useForm<dataUpdate>({
     defaultValues: {
       address: userInfo?.address || '',
       name: userInfo?.name || '',
       phone: userInfo?.phone || '',
-      avatar: userInfo?.phone || '',
+      avatar: userInfo?.avatar || '',
       date_of_birth: userInfo?.date_of_birth || new Date(1990, 0, 1)
     },
     resolver: yupResolver(schema)
   })
+  const previewAvatar = useMemo(() => {
+    if (avatarFile) {
+      return URL.createObjectURL(avatarFile)
+    }
+  }, [avatarFile])
 
   const updateUserMutation = useMutation({
     mutationFn: (data: dataUpdate) => {
@@ -40,16 +50,33 @@ export default function Profile() {
     },
     onSuccess: (data) => {
       saveUserInfoLS(data.data.data)
+      setUserInfo(data.data.data)
       toast.success('Cập nhật thông tin thành công!')
     }
   })
-  const handleFormSubmit = (data: dataUpdate) => {
+
+  const uploadAvatarMutation = useMutation({
+    mutationFn: (data: FormData) => {
+      return userApi.uploadAvatar(data)
+    }
+  })
+  const handleFormSubmit = async (data: dataUpdate) => {
     if (isDirty) {
       setUserInfo(data as User)
+      if (avatarFile) {
+        const formData = new FormData()
+        formData.append('image', avatarFile)
+        const respond = await uploadAvatarMutation.mutateAsync(formData)
+        setValue('avatar', respond.data.data)
+      }
       updateUserMutation.mutate(data)
     }
   }
-
+  const handleChangeAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.currentTarget.files?.[0]
+    setAvatarFile(file)
+    e.currentTarget.value = ''
+  }
   return (
     <div className='text-sm'>
       <div className='h-[68px]'>
@@ -77,7 +104,16 @@ export default function Profile() {
           </div>
           <div className='mb-[10px] flex items-center gap-6'>
             <p className='w-[15%] text-right text-gray-500'>Ngày Sinh</p>
-            <DateSelect value={userInfo?.date_of_birth as unknown as string} />
+            <Controller
+              control={control}
+              name='date_of_birth'
+              render={({ field: { onChange, value } }) => (
+                <DateSelect
+                  value={value as unknown as string}
+                  onChange={onChange} // send value to hook form
+                />
+              )}
+            />
           </div>
           <div className='my-[20px] my-[30px] flex items-center gap-6'>
             <p className='w-[15%]'></p>
@@ -88,10 +124,20 @@ export default function Profile() {
         </div>
         <div className='flex w-[30%] flex-col items-center border-l-[1px] border-stone-100 pl-[50px]'>
           <div className='h-[100px] w-[100px] overflow-hidden rounded-full'>
-            <img src={getUrlAvatar(userInfo?.avatar)} alt='avatar' className='h-full w-full object-cover' />
+            <img
+              src={previewAvatar || getUrlAvatar(userInfo?.avatar)}
+              alt='avatar'
+              className='h-full w-full object-cover'
+            />
           </div>
-          <input type='file' hidden />
-          <button className='my-[20px] border border-stone-200 px-[20px] py-[10px]'>Chọn Ảnh</button>
+          <input type='file' hidden ref={avatarRef} onChange={handleChangeAvatar} accept='.png, .jpg, .jpeg' />
+          <button
+            className='my-[20px] border border-stone-200 px-[20px] py-[10px]'
+            onClick={() => avatarRef.current?.click()}
+            type='button'
+          >
+            Chọn Ảnh
+          </button>
           <p className='text-center text-sm text-[#999999]'>Dụng lượng file tối đa 1 MB Định dạng: .JPEG, .PNG</p>
         </div>
       </form>
