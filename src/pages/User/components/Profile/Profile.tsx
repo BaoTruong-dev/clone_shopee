@@ -1,7 +1,8 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
 import classNames from 'classnames'
-import { useContext, useMemo, useRef, useState } from 'react'
+import { log } from 'console'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import userApi from 'src/apis/user.api'
@@ -17,15 +18,13 @@ import DateSelect from '../DateSelect/DateSelect'
 export type dataUpdate = Pick<UserSchemaType, 'address' | 'date_of_birth' | 'name' | 'phone' | 'avatar'>
 const schema = userSchema.omit(['password', 'new_password', 'confirm_new_password'])
 export default function Profile() {
-  const { userInfo, setUserInfo } = useContext(AuthContext)
+  const { userInfo, setUserInfo, avatarFile, setAvatarFile } = useContext(AuthContext)
   const avatarRef = useRef<HTMLInputElement>(null)
-  const [avatarFile, setAvatarFile] = useState<File>()
 
   const {
     register,
     handleSubmit,
     setValue,
-
     control,
     formState: { errors, isDirty }
   } = useForm<dataUpdate>({
@@ -38,11 +37,6 @@ export default function Profile() {
     },
     resolver: yupResolver(schema)
   })
-  const previewAvatar = useMemo(() => {
-    if (avatarFile) {
-      return URL.createObjectURL(avatarFile)
-    }
-  }, [avatarFile])
 
   const updateUserMutation = useMutation({
     mutationFn: (data: dataUpdate) => {
@@ -63,18 +57,43 @@ export default function Profile() {
   const handleFormSubmit = async (data: dataUpdate) => {
     if (isDirty) {
       setUserInfo(data as User)
-      if (avatarFile) {
+      if (avatarFile.file) {
         const formData = new FormData()
-        formData.append('image', avatarFile)
+        formData.append('image', avatarFile.file)
         const respond = await uploadAvatarMutation.mutateAsync(formData)
-        setValue('avatar', respond.data.data)
+        setAvatarFile({
+          file: undefined,
+          preview: ''
+        })
+        setUserInfo((prev) => {
+          return {
+            ...prev,
+            avatar: respond.data.data
+          }
+        })
+        return updateUserMutation.mutate({
+          ...data,
+          avatar: respond.data.data
+        })
+      } else {
+        return updateUserMutation.mutate(data)
       }
-      updateUserMutation.mutate(data)
     }
   }
+  useEffect(() => {
+    if (avatarFile.file) {
+      setValue('avatar', ' ', { shouldDirty: true })
+    }
+  }, [avatarFile, setValue])
   const handleChangeAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.currentTarget.files?.[0]
-    setAvatarFile(file)
+    if (file) {
+      setAvatarFile({
+        file,
+        preview: URL.createObjectURL(file)
+      })
+    }
+
     e.currentTarget.value = ''
   }
   return (
@@ -125,7 +144,7 @@ export default function Profile() {
         <div className='flex w-[30%] flex-col items-center border-l-[1px] border-stone-100 pl-[50px]'>
           <div className='h-[100px] w-[100px] overflow-hidden rounded-full'>
             <img
-              src={previewAvatar || getUrlAvatar(userInfo?.avatar)}
+              src={avatarFile.preview || getUrlAvatar(userInfo?.avatar)}
               alt='avatar'
               className='h-full w-full object-cover'
             />

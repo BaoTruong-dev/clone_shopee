@@ -17,7 +17,7 @@ import { getUrlAvatar } from 'src/utils/utils'
 const schemaName = schema.pick(['name'])
 type FormData = Pick<SchemaType, 'name'>
 export default function Header() {
-  const { setIsAuthenticated, setUserInfo, isAuthenticated } = useContext(AuthContext)
+  const { setIsAuthenticated, userInfo, setUserInfo, isAuthenticated } = useContext(AuthContext)
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const { register, handleSubmit } = useForm({
@@ -41,12 +41,7 @@ export default function Header() {
     enabled: isAuthenticated,
     staleTime: Infinity
   })
-  const { data: dataUser } = useQuery({
-    queryKey: ['me'],
-    queryFn: userApi.getUser,
-    staleTime: Infinity
-  })
-  const userInfo = dataUser?.data.data
+
   const onSubmit = (data: FormData) => {
     const queryString = new URLSearchParams({
       ...queryConfig,
