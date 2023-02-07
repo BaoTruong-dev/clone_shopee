@@ -10,7 +10,11 @@ const userApi = {
     return http.put<ResponseApi<User>>('user', data)
   },
   uploadAvatar: (data: FormData) => {
-    return http.put<ResponseApi<string>>('user/upload-avatar', data)
+    return http.post<ResponseApi<string>>('user/upload-avatar', data, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
   }
 }
 

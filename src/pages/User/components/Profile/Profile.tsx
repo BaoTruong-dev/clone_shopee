@@ -1,8 +1,8 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
 import classNames from 'classnames'
-import { useContext, useEffect, useMemo, useRef, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useContext, useMemo, useRef, useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import userApi from 'src/apis/user.api'
 import Input from 'src/components/Input/Input'
@@ -20,25 +20,29 @@ export default function Profile() {
   const { userInfo, setUserInfo } = useContext(AuthContext)
   const avatarRef = useRef<HTMLInputElement>(null)
   const [avatarFile, setAvatarFile] = useState<File>()
-  const previewAvatar = useMemo(() => {
-    return avatarFile ? URL.createObjectURL(avatarFile) : ''
-  }, [avatarFile])
 
   const {
     register,
     handleSubmit,
     setValue,
+
+    control,
     formState: { errors, isDirty }
   } = useForm<dataUpdate>({
     defaultValues: {
       address: userInfo?.address || '',
       name: userInfo?.name || '',
       phone: userInfo?.phone || '',
-      avatar: userInfo?.phone || '',
+      avatar: userInfo?.avatar || '',
       date_of_birth: userInfo?.date_of_birth || new Date(1990, 0, 1)
     },
     resolver: yupResolver(schema)
   })
+  const previewAvatar = useMemo(() => {
+    if (avatarFile) {
+      return URL.createObjectURL(avatarFile)
+    }
+  }, [avatarFile])
 
   const updateUserMutation = useMutation({
     mutationFn: (data: dataUpdate) => {
@@ -46,6 +50,7 @@ export default function Profile() {
     },
     onSuccess: (data) => {
       saveUserInfoLS(data.data.data)
+      setUserInfo(data.data.data)
       toast.success('Cập nhật thông tin thành công!')
     }
   })
@@ -60,13 +65,11 @@ export default function Profile() {
       setUserInfo(data as User)
       if (avatarFile) {
         const formData = new FormData()
-        formData.append('avatar', avatarFile)
+        formData.append('image', avatarFile)
         const respond = await uploadAvatarMutation.mutateAsync(formData)
-        console.log(respond)
-
-        // setValue('avatar', respond.data.data)
+        setValue('avatar', respond.data.data)
       }
-      // updateUserMutation.mutate(data)
+      updateUserMutation.mutate(data)
     }
   }
   const handleChangeAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -101,7 +104,16 @@ export default function Profile() {
           </div>
           <div className='mb-[10px] flex items-center gap-6'>
             <p className='w-[15%] text-right text-gray-500'>Ngày Sinh</p>
-            <DateSelect value={userInfo?.date_of_birth as unknown as string} />
+            <Controller
+              control={control}
+              name='date_of_birth'
+              render={({ field: { onChange, value } }) => (
+                <DateSelect
+                  value={value as unknown as string}
+                  onChange={onChange} // send value to hook form
+                />
+              )}
+            />
           </div>
           <div className='my-[30px] flex items-center gap-6'>
             <p className='w-[15%]'></p>
@@ -122,6 +134,7 @@ export default function Profile() {
           <button
             className='my-[20px] border border-stone-200 px-[20px] py-[10px]'
             onClick={() => avatarRef.current?.click()}
+            type='button'
           >
             Chọn Ảnh
           </button>

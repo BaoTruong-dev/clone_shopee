@@ -8,14 +8,12 @@ import classNames from 'classnames'
 import { useQuery } from '@tanstack/react-query'
 import userApi from 'src/apis/user.api'
 import { getUrlAvatar } from 'src/utils/utils'
+import { useContext } from 'react'
+import { AuthContext } from 'src/context/auth.context'
 export default function Sidebar() {
   const navigate = useNavigate()
-  const { data } = useQuery({
-    queryKey: ['me'],
-    queryFn: userApi.getUser,
-    staleTime: Infinity
-  })
-  const userInfo = data?.data.data
+  const { userInfo } = useContext(AuthContext)
+
   return (
     <aside>
       <div className='flex gap-4'>
