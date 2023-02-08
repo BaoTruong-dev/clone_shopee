@@ -37,7 +37,6 @@ class Http {
         } else if (response.config.url === 'logout') {
           clearDataLS()
         }
-
         return response
       },
       function (error: any) {

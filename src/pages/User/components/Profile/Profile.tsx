@@ -15,7 +15,7 @@ import { saveUserInfoLS } from 'src/utils/auth.ls'
 import { getUrlAvatar } from 'src/utils/utils'
 import DateSelect from '../DateSelect/DateSelect'
 
-export type dataUpdate = Pick<UserSchemaType, 'address' | 'date_of_birth' | 'name' | 'phone' | 'avatar'>
+export type DataUpdate = Pick<UserSchemaType, 'address' | 'date_of_birth' | 'name' | 'phone' | 'avatar'>
 const schema = userSchema.omit(['password', 'new_password', 'confirm_new_password'])
 export default function Profile() {
   const { userInfo, setUserInfo, avatarFile, setAvatarFile } = useContext(AuthContext)
@@ -27,7 +27,7 @@ export default function Profile() {
     setValue,
     control,
     formState: { errors, isDirty }
-  } = useForm<dataUpdate>({
+  } = useForm<DataUpdate>({
     defaultValues: {
       address: userInfo?.address || '',
       name: userInfo?.name || '',
@@ -39,7 +39,7 @@ export default function Profile() {
   })
 
   const updateUserMutation = useMutation({
-    mutationFn: (data: dataUpdate) => {
+    mutationFn: (data: DataUpdate) => {
       return userApi.updateUser(data)
     },
     onSuccess: (data) => {
@@ -54,7 +54,7 @@ export default function Profile() {
       return userApi.uploadAvatar(data)
     }
   })
-  const handleFormSubmit = async (data: dataUpdate) => {
+  const handleFormSubmit = async (data: DataUpdate) => {
     if (isDirty) {
       setUserInfo(data as User)
       if (avatarFile.file) {
@@ -62,8 +62,8 @@ export default function Profile() {
         formData.append('image', avatarFile.file)
         const respond = await uploadAvatarMutation.mutateAsync(formData)
         setAvatarFile({
-          file: undefined,
-          preview: ''
+          ...avatarFile,
+          file: undefined
         })
         setUserInfo((prev) => {
           return {
@@ -82,7 +82,7 @@ export default function Profile() {
   }
   useEffect(() => {
     if (avatarFile.file) {
-      setValue('avatar', ' ', { shouldDirty: true })
+      setValue('avatar', '', { shouldDirty: true })
     }
   }, [avatarFile, setValue])
   const handleChangeAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,7 +97,7 @@ export default function Profile() {
     e.currentTarget.value = ''
   }
   return (
-    <div className='text-sm'>
+    <div className='rounded-sm p-[20px] text-sm shadow-md'>
       <div className='h-[68px]'>
         <p className='text-[18px] font-medium'>Hồ Sơ Của Tôi</p>
         <p className='mt-[10px] text-sm text-gray-600'>Quản lý thông tin hồ sơ để bảo mật tài khoản</p>
@@ -107,7 +107,7 @@ export default function Profile() {
         <div className='flex-1'>
           <div className='mb-[30px] flex gap-6'>
             <p className='w-[15%] text-right text-gray-500'>Email</p>
-            <p className='flex-1'>baotruong2k</p>
+            <p className='flex-1'>{userInfo?.email}</p>
           </div>
           <div className='mb-[10px] flex items-center gap-6'>
             <p className='mb-[24px] w-[15%] text-right text-gray-500'>Tên</p>
@@ -134,7 +134,7 @@ export default function Profile() {
               )}
             />
           </div>
-          <div className='my-[20px] my-[30px] flex items-center gap-6'>
+          <div className='my-[30px] flex items-center gap-6'>
             <p className='w-[15%]'></p>
             <div className='flex-grow'>
               <MainButton className={classNames({ 'bg-primary/70': !isDirty })}>Lưu</MainButton>

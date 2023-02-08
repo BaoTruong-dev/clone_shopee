@@ -3,6 +3,7 @@ import produce from 'immer'
 import _ from 'lodash'
 import React, { useContext, useMemo, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { purchasesApi } from 'src/apis/purchases.api'
 import MainButton from 'src/components/MainButton/MainButton'
 import QuantityController from 'src/components/QuantityController/QuantityController'
@@ -22,12 +23,14 @@ export default function Cart() {
   const buyCartMutation = useMutation({
     mutationFn: (data: PurchasesAddItem[]) => purchasesApi.buyCart(data),
     onSuccess: () => {
+      toast.success('Mua hàng thành công!')
       refetch()
     }
   })
   const deleteCartMutation = useMutation({
     mutationFn: (data: string[]) => purchasesApi.deleteCart(data),
     onSuccess: () => {
+      toast.success('Xoá đơn hàng thành công!')
       refetch()
     }
   })
@@ -117,11 +120,11 @@ export default function Cart() {
   }
   if (purchasesCart.length <= 0) {
     return (
-      <div className='flex flex-col items-center justify-center py-20'>
+      <div className='justify-center flex flex-col items-center py-20'>
         <img src={empty_cart} alt='empty_cart' width={100} />
         <p className='mt-[20px] text-sm font-bold text-stone-400'>Giỏ hàng của bạn còn trống</p>
         <Link to='/'>
-          <MainButton className='text-md mt-[20px] flex h-[36px] w-[160px] items-center justify-center uppercase'>
+          <MainButton className='text-md justify-center mt-[20px] flex h-[36px] w-[160px] items-center uppercase'>
             Mua ngay
           </MainButton>
         </Link>
@@ -171,20 +174,20 @@ export default function Cart() {
                       <img
                         src={e.product.image}
                         alt={e.product.name}
-                        className='h-20 w-20 flex-shrink-0 object-cover'
+                        className='h-20 w-20 flex-shrink-0 border-stone-200 object-cover'
                       />
                       <p className='h-max max-w-[60%] line-clamp-2'>{e.product.name}</p>
                     </Link>
                   </div>
                   <div className='col-span-7'>
                     <div className='grid h-full grid-cols-5 '>
-                      <div className='col-span-2 flex items-center justify-center gap-4'>
+                      <div className='justify-center col-span-2 flex items-center gap-4'>
                         <p className='text-stone-500 line-through'>
                           ₫{new Intl.NumberFormat('de-DE').format(e.price_before_discount)}
                         </p>
                         <p>₫{new Intl.NumberFormat('de-DE').format(e.price)}</p>
                       </div>
-                      <div className='col-span-1 flex items-center justify-center'>
+                      <div className='justify-center col-span-1 flex items-center'>
                         <QuantityController
                           max={e.product.quantity}
                           quantity={quantityOnTypeValue[index]}
@@ -192,11 +195,11 @@ export default function Cart() {
                           handleOnType={handleOnType(e.product._id, index)}
                         />
                       </div>
-                      <div className='col-span-1 flex items-center justify-center text-primary'>
+                      <div className='justify-center col-span-1 flex items-center text-primary'>
                         ₫{new Intl.NumberFormat('de-DE').format(e.price * e.buy_count)}
                       </div>
                       <button
-                        className='col-span-1 flex items-center justify-center hover:text-primary'
+                        className='justify-center col-span-1 flex items-center hover:text-primary'
                         onClick={() => handleDeletePurchases(e._id)}
                       >
                         Xoá

@@ -26,7 +26,7 @@ export default function Sidebar() {
           role='button'
         />
         <Link to={router.user} className='text-sm'>
-          <p className='mb-[4px] font-bold line-clamp-1'>baotruong2k</p>
+          <p className='mb-[4px] font-bold line-clamp-1'>{userInfo?.email}</p>
           <div className='flex items-center'>
             <svg
               width={12}
@@ -70,7 +70,7 @@ export default function Sidebar() {
         <p className=' text-sm font-medium '>Đổi Mật Khẩu</p>
       </NavLink>
       <NavLink
-        to={router.userStatusCart}
+        to={`${router.userStatusCart}?status=0`}
         className={({ isActive }) =>
           classNames('mb-4 flex items-center gap-3  hover:text-primary', {
             'text-primary': isActive

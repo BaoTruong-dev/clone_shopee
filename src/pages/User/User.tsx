@@ -8,7 +8,7 @@ export default function User() {
         <div className='col-span-2 pt-[20px]'>
           <Sidebar />
         </div>
-        <div className='col-span-10 rounded-sm p-[20px] shadow-md'>
+        <div className='col-span-10 '>
           <Outlet />
         </div>
       </div>
