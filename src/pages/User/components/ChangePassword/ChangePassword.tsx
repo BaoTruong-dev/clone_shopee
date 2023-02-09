@@ -28,6 +28,9 @@ export default function ChangePassword() {
     mutationFn: (data: PasswordUpdate) => userApi.updateUser(data),
     onSuccess: () => {
       toast.success('Đổi mật khẩu thành công!')
+    },
+    onError: (error: any) => {
+      toast.error(error.response.data.data.password)
     }
   })
   const onSubmit = (data: PasswordUpdate) => {

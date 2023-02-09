@@ -27,7 +27,6 @@ class Http {
         return Promise.reject(error)
       }
     )
-
     this.instance.interceptors.response.use(
       (response) => {
         if (response.config.url === 'login' || response.config.url === 'register') {

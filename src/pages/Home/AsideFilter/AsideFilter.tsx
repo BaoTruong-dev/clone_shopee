@@ -44,7 +44,7 @@ export default function AsideFilter({ queryConfig, categories }: AsideFilterProp
   }
   const handleSortPrice = () => {
     if (priceFilter.minPrice && priceFilter.maxPrice) {
-      if (priceFilter.minPrice > priceFilter.maxPrice) {
+      if (Number(priceFilter.minPrice) > Number(priceFilter.maxPrice)) {
         return setErrorPrice('Vui lòng điền khoảng giá phù hợp')
       }
       const queryString = new URLSearchParams({
@@ -72,8 +72,7 @@ export default function AsideFilter({ queryConfig, categories }: AsideFilterProp
           pathname: router.home,
           search: `${queryString}`
         })
-      }
-      if (priceFilter.maxPrice) {
+      } else if (priceFilter.maxPrice) {
         const queryString = new URLSearchParams(
           _.omit(
             {
@@ -87,9 +86,21 @@ export default function AsideFilter({ queryConfig, categories }: AsideFilterProp
           pathname: router.home,
           search: `${queryString}`
         })
-      }
-      if (!priceFilter.maxPrice && !priceFilter.minPrice) {
-        return setErrorPrice('Vui lòng điền khoảng giá phù hợp')
+      } else {
+        const queryString = new URLSearchParams(
+          _.omit(
+            {
+              ...queryConfig,
+              price_max: priceFilter.maxPrice.toString()
+            },
+            'price_min',
+            'price_max'
+          )
+        ).toString()
+        navigate({
+          pathname: router.home,
+          search: `${queryString}`
+        })
       }
     }
 

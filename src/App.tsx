@@ -1,22 +1,23 @@
 import { useIsFetching, useIsMutating } from '@tanstack/react-query'
-import { useContext, useEffect } from 'react'
-import { Navigate, Outlet, useLocation, useRoutes } from 'react-router-dom'
+import { lazy, Suspense, useContext, useEffect } from 'react'
+import { Navigate, Outlet, useRoutes } from 'react-router-dom'
 import Modal from './components/Modal/Modal'
 import { router } from './constant/router'
 import { AuthContext } from './context/auth.context'
 import { PurchasesContext } from './context/purchasesCart.context'
-import AuthLayout from './layouts/AuthLayout/AuthLayout'
-import MainLayout from './layouts/MainLayout/MainLayout'
-import Cart from './pages/Cart/Cart'
-import Home from './pages/Home/Home'
-import Login from './pages/Login/Login'
-import ProductDetail from './pages/ProductDetail/ProductDetail'
-// import Profile from './pages/Profile/Profile'
-import Register from './pages/Register/Register'
-import ChangePassword from './pages/User/components/ChangePassword/ChangePassword'
-import Profile from './pages/User/components/Profile/Profile'
-import StatusCart from './pages/User/components/StatusCart/StatusCart'
-import User from './pages/User/User'
+
+const AuthLayout = lazy(() => import('./layouts/AuthLayout/AuthLayout'))
+const MainLayout = lazy(() => import('./layouts/MainLayout/MainLayout'))
+const Cart = lazy(() => import('./pages/Cart/Cart'))
+const Home = lazy(() => import('./pages/Home/Home'))
+const Login = lazy(() => import('./pages/Login/Login'))
+const ProductDetail = lazy(() => import('./pages/ProductDetail/ProductDetail'))
+const Register = lazy(() => import('./pages/Register/Register'))
+const ChangePassword = lazy(() => import('./pages/User/components/ChangePassword/ChangePassword'))
+const NotFound = lazy(() => import('./pages/User/components/NotFound/NotFound'))
+const Profile = lazy(() => import('./pages/User/components/Profile/Profile'))
+const StatusCart = lazy(() => import('./pages/User/components/StatusCart/StatusCart'))
+const User = lazy(() => import('./pages/User/User'))
 
 function App() {
   const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext)
@@ -44,7 +45,11 @@ function App() {
   const element = useRoutes([
     {
       path: router.home,
-      element: <MainLayout />,
+      element: (
+        <Suspense>
+          <MainLayout />
+        </Suspense>
+      ),
       children: [
         {
           index: true,
@@ -62,7 +67,11 @@ function App() {
       children: [
         {
           path: router.home,
-          element: <MainLayout />,
+          element: (
+            <Suspense>
+              <MainLayout />
+            </Suspense>
+          ),
           children: [
             {
               path: router.user,
@@ -84,13 +93,16 @@ function App() {
             },
             {
               path: router.cart,
-              element: <Cart />
+              element: (
+                <Suspense>
+                  <Cart />
+                </Suspense>
+              )
             }
           ]
         }
       ]
     },
-
     {
       path: '',
       element: <RejectedRoute />,
@@ -98,20 +110,34 @@ function App() {
         {
           path: router.login,
           element: (
-            <AuthLayout name='Đăng nhập'>
-              <Login />
-            </AuthLayout>
+            <Suspense>
+              <AuthLayout name='Đăng nhập'>
+                <Login />
+              </AuthLayout>
+            </Suspense>
           )
         },
         {
           path: router.register,
           element: (
-            <AuthLayout name='Đăng ký'>
-              <Register />
-            </AuthLayout>
+            <Suspense>
+              <AuthLayout name='Đăng ký'>
+                <Register />
+              </AuthLayout>
+            </Suspense>
           )
         }
       ]
+    },
+    {
+      path: '*',
+      element: (
+        <Suspense>
+          <MainLayout>
+            <NotFound />
+          </MainLayout>
+        </Suspense>
+      )
     }
   ])
   return (

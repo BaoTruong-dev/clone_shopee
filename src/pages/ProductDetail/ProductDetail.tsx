@@ -34,7 +34,6 @@ export default function ProductDetail() {
     keepPreviousData: true
   })
   const product = productInfo?.data.data
-
   const { data: productsRelative } = useQuery({
     queryKey: ['product_relative', product?.category._id, id],
     queryFn: () => {
