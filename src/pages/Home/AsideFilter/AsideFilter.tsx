@@ -1,12 +1,13 @@
 import classNames from 'classnames'
-import { useNavigate } from 'react-router-dom'
-import MainButton from 'src/components/MainButton/MainButton'
-import { router } from 'src/constant/router'
-import { Category } from 'src/types/category.type'
 import _ from 'lodash'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
+import MainButton from 'src/components/MainButton/MainButton'
 import StarFilter from 'src/components/StarFilter/StarFilter'
+import { router } from 'src/constant/router'
 import { ConfigURL } from 'src/hooks/useQueryConfig'
+import { Category } from 'src/types/category.type'
 
 interface AsideFilterProps {
   queryConfig: ConfigURL
@@ -19,6 +20,7 @@ interface PriceFilter {
 
 export default function AsideFilter({ queryConfig, categories }: AsideFilterProps) {
   const navigate = useNavigate()
+  const { t } = useTranslation(['translation', 'common'])
   const [priceFilter, setPriceFilter] = useState<PriceFilter>({
     minPrice: NaN,
     maxPrice: NaN
@@ -138,6 +140,7 @@ export default function AsideFilter({ queryConfig, categories }: AsideFilterProp
       search: `${queryString}`
     })
   }
+
   return (
     <div className='text-sm'>
       <div>
@@ -156,7 +159,7 @@ export default function AsideFilter({ queryConfig, categories }: AsideFilterProp
             />
           </svg>
           <p className={classNames('ml-[5px] cursor-pointer font-bold', { 'text-primary': !queryConfig.category })}>
-            Tất cả danh mục
+            {t('all-category')}
           </p>
         </div>
         <div className='my-[15px] h-[1px] w-full bg-slate-200'></div>

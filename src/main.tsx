@@ -11,6 +11,7 @@ import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary'
 import { AuthProvider } from './context/auth.context'
 import { PurchasesProvider } from './context/purchasesCart.context'
 import './index.css'
+import './i18n/i18n'
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
