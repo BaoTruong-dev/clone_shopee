@@ -27,7 +27,7 @@ export default function StatusCart() {
 
   return (
     <div>
-      <div className='sticky top-0 grid grid-cols-6 overflow-scroll rounded-sm shadow-md'>
+      <div className='sticky top-0 grid grid-cols-6 rounded-sm shadow-md'>
         {statusRouter.map((e, index) => {
           return (
             <Link

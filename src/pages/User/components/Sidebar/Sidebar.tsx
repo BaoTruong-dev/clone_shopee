@@ -15,8 +15,8 @@ export default function Sidebar() {
   const { userInfo } = useContext(AuthContext)
 
   return (
-    <aside>
-      <div className='flex gap-4'>
+    <aside className='w-full'>
+      <div className='flex w-full gap-4'>
         <img
           src={getUrlAvatar(userInfo?.avatar)}
           alt='avatar'
@@ -25,7 +25,7 @@ export default function Sidebar() {
           // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
           role='button'
         />
-        <Link to={router.user} className='text-sm'>
+        <Link to={router.user} className=' text-sm'>
           <p className='mb-[4px] font-bold line-clamp-1'>{userInfo?.email}</p>
           <div className='flex items-center'>
             <svg
