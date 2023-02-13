@@ -1,0 +1,38 @@
+{
+  "header": {
+    "language-vi": "Tiếng Việt",
+    "language-en": "Tiếng Anh",
+    "register": "Đăng Ký",
+    "login": "Đăng Nhập",
+    "user": "Tài Khoản Của Tôi",
+    "purchase": "Đơn Mua",
+    "logout": "Đăng Xuất",
+    "cart-add-item": "Sản phẩm mới thêm",
+    "cart-view": "Xem Giỏ Hàng",
+    "cart-add-item-already": "Đã Thêm Vào Giỏ Hàng",
+    "cart-empty": "Chưa Có Sản Phẩm"
+  },
+  "aside-filter": {
+    "all-category": "Tất Cả Danh Mục",
+    "t-shirt": "Áo thun",
+    "clock": "Đồng hồ",
+    "phone": "Điện thoại",
+    "search-filter": "BỘ LỌC TÌM KIẾM",
+    "price-range": "Khoảng Giá",
+    "from": "TỪ",
+    "to": "ĐẾN",
+    "apply": "ÁP DỤNG",
+    "rating": "Đánh Giá",
+    "up": "Trở Lên",
+    "clear-all": "XOÁ TẤT CẢ"
+  },
+  "home-sort": {
+    "sort-by": "Sort by",
+    "latest": "Mới Nhất",
+    "popular": "Phổ Biến",
+    "top-sales": "Bán Chạy",
+    "price": "Giá",
+    "from-low": "Thấp đến Cao",
+    "from-high": "Cap đến thấp"
+  }
+}

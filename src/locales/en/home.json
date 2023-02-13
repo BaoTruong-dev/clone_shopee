@@ -1,0 +1,38 @@
+{
+  "header": {
+    "language-vi": "Vietnamese",
+    "language-en": "English",
+    "register": "Sign Up",
+    "login": "Login",
+    "user": "My Account",
+    "purchase": "My Purchase",
+    "logout": "Logout",
+    "cart-add-item": "Recently Added Products",
+    "cart-add-item-already": "Added To Cart Already",
+    "cart-empty": "Empty Cart Now",
+    "cart-view": "View My Shopping Cart"
+  },
+  "aside-filter": {
+    "all-category": "All Of The Categories",
+    "t-shirt": "T-Shirt",
+    "clock": "Clock",
+    "phone": "Phone",
+    "search-filter": "SEARCH FILTER",
+    "price-range": "Price Range",
+    "from": "FROM",
+    "to": "TO",
+    "apply": "APPLY",
+    "rating": "Rating",
+    "up": "Up",
+    "clear-all": "CLEAR ALL"
+  },
+  "home-sort": {
+    "sort-by": "Sort by",
+    "latest": "Latest",
+    "popular": "Popular",
+    "top-sales": "Top Sales",
+    "price": "Price",
+    "from-low": "Low to High",
+    "from-high": "High to Low"
+  }
+}

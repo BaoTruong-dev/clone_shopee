@@ -1,4 +1,5 @@
 import classNames from 'classnames'
+import i18next from 'i18next'
 import _ from 'lodash'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -8,7 +9,7 @@ import StarFilter from 'src/components/StarFilter/StarFilter'
 import { router } from 'src/constant/router'
 import { ConfigURL } from 'src/hooks/useQueryConfig'
 import { Category } from 'src/types/category.type'
-
+import { categoriesI18t } from '../../../constant/lang'
 interface AsideFilterProps {
   queryConfig: ConfigURL
   categories: Category[]
@@ -20,7 +21,7 @@ interface PriceFilter {
 
 export default function AsideFilter({ queryConfig, categories }: AsideFilterProps) {
   const navigate = useNavigate()
-  const { t } = useTranslation(['translation', 'common'])
+  const { t } = useTranslation('home')
   const [priceFilter, setPriceFilter] = useState<PriceFilter>({
     minPrice: NaN,
     maxPrice: NaN
@@ -159,11 +160,11 @@ export default function AsideFilter({ queryConfig, categories }: AsideFilterProp
             />
           </svg>
           <p className={classNames('ml-[5px] cursor-pointer font-bold', { 'text-primary': !queryConfig.category })}>
-            {t('all-category')}
+            {t('aside-filter.all-category')}
           </p>
         </div>
         <div className='my-[15px] h-[1px] w-full bg-slate-200'></div>
-        {categories?.map((e) => {
+        {categories?.map((e, index) => {
           return (
             <div
               className='mb-[5px] flex cursor-pointer items-center'
@@ -182,7 +183,7 @@ export default function AsideFilter({ queryConfig, categories }: AsideFilterProp
                 </svg>
               </div>
               <p className={classNames('ml-[5px] text-sm ', { 'font-bold text-primary': activeClass(e._id) })}>
-                {e.name}
+                {i18next.language === 'vi' ? e.name : categoriesI18t[index]}
               </p>
             </div>
           )
@@ -204,15 +205,15 @@ export default function AsideFilter({ queryConfig, categories }: AsideFilterProp
               d='M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z'
             />
           </svg>
-          <p className='ml-[5px] font-bold uppercase'>Bộ lọc tìm kiếm</p>
+          <p className='ml-[5px] font-bold'>{t('aside-filter.search-filter')}</p>
         </div>
         <div className='my-[15px] h-[1px] w-full bg-slate-200'></div>
         <div>
-          <p className='font-medium'>Khoảng giá</p>
+          <p className='font-medium'>{t('aside-filter.price-range')}</p>
           <div className='space-between mt-[10px] flex items-center gap-6'>
             <input
               type='number'
-              placeholder='₫ TỪ'
+              placeholder={`₫ ${t('aside-filter.from')}`}
               value={priceFilter.minPrice}
               min={1}
               onChange={handleOnChangePrice('minPrice')}
@@ -221,24 +222,26 @@ export default function AsideFilter({ queryConfig, categories }: AsideFilterProp
             <div className=' relative after:absolute after:top-[50%] after:left-[50%] after:h-[2px] after:w-2 after:translate-x-[-50%] after:translate-y-[-50%] after:bg-slate-200'></div>
             <input
               type='number'
-              placeholder='₫ ĐẾN'
+              placeholder={`₫ ${t('aside-filter.to')}`}
               onChange={handleOnChangePrice('maxPrice')}
               value={priceFilter.maxPrice}
               className='w-full rounded-sm border border-slate-200 p-[5px] outline-none'
             />
           </div>
           <div className='mt-2 text-center text-xs text-red-500'>{errorPrice}</div>
-          <MainButton onClick={handleSortPrice} className='mt-[30px]'>
-            Áp dụng
+          <MainButton onClick={handleSortPrice} className='mt-[30px] !w-full'>
+            {t('aside-filter.apply')}
           </MainButton>
         </div>
         <div className='my-[15px] h-[1px] w-full bg-slate-200'></div>
         <div>
-          <div className='mb-[5px] font-medium'>Đánh giá</div>
-          <StarFilter queryConfig={queryConfig} />
+          <div className='mb-[5px] font-medium'>{t('aside-filter.rating')}</div>
+          <StarFilter queryConfig={queryConfig} text={t('aside-filter.up')} />
         </div>
         <div className='my-[15px] h-[1px] w-full bg-slate-200'></div>
-        <MainButton onClick={handleClearFilter}>Xoá tất cả</MainButton>
+        <MainButton onClick={handleClearFilter} className='!w-full'>
+          {t('aside-filter.clear-all')}
+        </MainButton>
       </div>
     </div>
   )

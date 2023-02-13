@@ -27,7 +27,6 @@ class Http {
         return config
       },
       (error) => {
-        console.log('error ne', error)
         return Promise.reject(error)
       }
     )
@@ -47,7 +46,10 @@ class Http {
         return response
       },
       (error: any) => {
-        if (error.response.status === 401 && error.response.data.data.name === 'EXPIRED_TOKEN') {
+        const config = error.response?.config || {}
+        if (error.response.status === 422) {
+          return Promise.reject(error)
+        } else if (error.response.status === 401 && error.response.data.data.name === 'EXPIRED_TOKEN') {
           this.instance
             .post('refresh-access-token', {
               refresh_token: this.refreshToken
@@ -56,6 +58,7 @@ class Http {
               const { access_token } = res.data.data
               saveAccessTokenLS(access_token)
               this.accessToken = access_token
+              return this.instance({ ...config, headers: { ...config.headers, authorization: access_token } })
             })
             .catch((error) => {
               const ToKenExpired = new Event('token_expired')

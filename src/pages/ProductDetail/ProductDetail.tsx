@@ -47,7 +47,8 @@ export default function ProductDetail() {
       return purchasesApi.addToCart(formData)
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['purchases', { status: -1 }] })
+      toast.success('Đã thêm vào giỏ hàng')
+      queryClient.removeQueries({ queryKey: ['purchases', { status: -1 }] })
     }
   })
 
@@ -62,12 +63,12 @@ export default function ProductDetail() {
         {
           product_id: id,
           buy_count: quantity
-        },
-        {
-          onSuccess: () => {
-            toast.success('Đã thêm vào giỏ hàng')
-          }
         }
+        // {
+        //   onSuccess: () => {
+        //     toast.success('Đã thêm vào giỏ hàng')
+        //   }
+        // }
       )
     } else {
       navigate('/login')

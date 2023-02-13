@@ -8,9 +8,11 @@ import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
 import authApi from 'src/apis/auth.api'
 import { purchasesApi } from 'src/apis/purchases.api'
+import { languageI18t } from 'src/constant/lang'
 import { AuthContext } from 'src/context/auth.context'
 import useQueryConfig, { ConfigURL } from 'src/hooks/useQueryConfig'
 import schema, { SchemaType } from 'src/schema/schema'
+import { saveLanguageLS } from 'src/utils/auth.ls'
 import { getUrlAvatar } from 'src/utils/utils'
 import empty_cart from '../../assets/cart.png'
 import { router } from '../../constant/router'
@@ -19,7 +21,7 @@ import Popover from '../Popover/Popover'
 const schemaName = schema.pick(['name'])
 type FormData = Pick<SchemaType, 'name'>
 export default function Header() {
-  const { t } = useTranslation()
+  const { t } = useTranslation('home')
   const { setIsAuthenticated, userInfo, setUserInfo, isAuthenticated } = useContext(AuthContext)
   const queryClient = useQueryClient()
   const navigate = useNavigate()
@@ -44,7 +46,7 @@ export default function Header() {
     enabled: isAuthenticated,
     staleTime: Infinity
   })
-
+  console.log(cartInfo?.data.data)
   const onSubmit = (data: FormData) => {
     const queryString = new URLSearchParams({
       ...queryConfig,
@@ -57,6 +59,7 @@ export default function Header() {
   }
   const onChangeLang = (name: string) => {
     i18next.changeLanguage(name)
+    saveLanguageLS(name)
   }
   return (
     <div className='bg-primary py-[10px] text-white'>
@@ -73,7 +76,7 @@ export default function Header() {
                   role='button'
                   tabIndex={0}
                 >
-                  {t('language-vi')}
+                  {t('header.language-vi')}
                 </div>
                 <div
                   className={classNames('w-[200px] cursor-pointer p-[10px] transition-[0.4s] hover:text-primary', {
@@ -83,7 +86,7 @@ export default function Header() {
                   tabIndex={0}
                   onClick={() => onChangeLang('en')}
                 >
-                  {t('language-en')}
+                  {t('header.language-en')}
                 </div>
               </>
             }
@@ -103,7 +106,7 @@ export default function Header() {
                   d='M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418'
                 />
               </svg>
-              <p className='mx-[4px]'>{t(`language-${i18next.language}`)}</p>
+              <p className='mx-[4px]'>{languageI18t[i18next.language as keyof typeof languageI18t]}</p>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 fill='none'
@@ -126,20 +129,20 @@ export default function Header() {
               contentElement={
                 <div className='flex flex-col '>
                   <Link to={router.user} className='p-[10px] hover:bg-slate-100 hover:text-secondary'>
-                    Tài khoản của tôi
+                    {t('header.user')}
                   </Link>
                   <Link
                     to={`${router.userStatusCart}?status=0`}
-                    className='p-[10px]  hover:bg-slate-100 hover:text-secondary'
+                    className='p-[10px] hover:bg-slate-100 hover:text-secondary'
                   >
-                    Đơn mua
+                    {t('header.purchase')}
                   </Link>
                   <Link
                     to='#'
                     className='p-[10px]  hover:bg-slate-100 hover:text-secondary'
                     onClick={() => logoutMutation.mutate()}
                   >
-                    Đăng xuất
+                    {t('header.logout')}
                   </Link>
                 </div>
               }
@@ -159,10 +162,10 @@ export default function Header() {
                 to={router.register}
                 className='mr-[10px] border-r-[1px] border-r-[rgba(226,226,226,0.5)] pr-[10px]  hover:opacity-75'
               >
-                Đăng ký
+                {t('header.register')}
               </Link>
               <Link to={router.login} className=' hover:opacity-75'>
-                Đăng nhập
+                {t('header.login')}
               </Link>
             </div>
           )}
@@ -208,7 +211,7 @@ export default function Header() {
               <div className='rouned-sm max-w-[400px] py-[10px]'>
                 {cartInfo && cartInfo.data.data.length > 0 ? (
                   <>
-                    <p className='mb-[20px] px-[10px] text-[18px] text-stone-300'>Sản phẩm mới thêm</p>
+                    <p className='mb-[20px] px-[10px]  text-stone-400'>{t('header.cart-add-item')}</p>
                     <div>
                       {cartInfo.data.data.slice(0, 5).map((e) => {
                         return (
@@ -230,7 +233,9 @@ export default function Header() {
                     <div className='mt-[30px] flex items-center justify-between px-[10px]'>
                       <div>
                         {cartInfo.data.data.length > 5 ? (
-                          <div className='text-xs'>{cartInfo.data.data.length - 5} đã thêm vào giỏ hàng</div>
+                          <div className='text-xs'>
+                            {cartInfo.data.data.length - 5} {t('header.cart-add-item-already')}
+                          </div>
                         ) : (
                           ''
                         )}
@@ -239,14 +244,14 @@ export default function Header() {
                         to='/cart'
                         className='rounded-sm bg-primary py-[10px] px-[15px] text-white transition-[0.4s] hover:bg-[#f05d40]'
                       >
-                        Xem giỏ hàng
+                        {t('header.cart-view')}
                       </Link>
                     </div>
                   </>
                 ) : (
                   <div className='flex h-[200px] w-[400px] flex-col items-center justify-center'>
                     <img src={empty_cart} alt='empty_cart' width={100} />
-                    <p className='mt-[20px] text-stone-400'>Chưa có sản phẩm</p>
+                    <p className='mt-[20px] text-stone-400'>{t('header.cart-empty')}</p>
                   </div>
                 )}
               </div>
