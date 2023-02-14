@@ -46,7 +46,6 @@ export default function Header() {
     enabled: isAuthenticated,
     staleTime: Infinity
   })
-  console.log(cartInfo?.data.data)
   const onSubmit = (data: FormData) => {
     const queryString = new URLSearchParams({
       ...queryConfig,

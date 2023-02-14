@@ -10,7 +10,9 @@ import userApi from 'src/apis/user.api'
 import { getUrlAvatar } from 'src/utils/utils'
 import { useContext } from 'react'
 import { AuthContext } from 'src/context/auth.context'
+import { useTranslation } from 'react-i18next'
 export default function Sidebar() {
+  const { t } = useTranslation('profile')
   const navigate = useNavigate()
   const { userInfo } = useContext(AuthContext)
 
@@ -35,7 +37,7 @@ export default function Sidebar() {
                 fillRule='evenodd'
               />
             </svg>
-            <div className='ml-[4px] text-sm text-gray-500'>Sửa Hồ Sơ</div>
+            <div className='ml-[4px] text-sm text-gray-500'>{t('edit-profile')}</div>
           </div>
         </Link>
       </div>
@@ -50,7 +52,7 @@ export default function Sidebar() {
         }
       >
         <img src={user_icon} alt='icon' className=' h-[20px] w-[20px] shrink-0 object-cover' />
-        <p className=' text-sm font-medium '>Tài Khoản Của Tôi</p>
+        <p className=' text-sm font-medium '>{t('my-account')}</p>
       </NavLink>
       <NavLink
         to={router.userChangePassword}
@@ -61,7 +63,7 @@ export default function Sidebar() {
         }
       >
         <img src={password_icon} alt='icon' className=' h-[20px] w-[20px] shrink-0 object-cover' />
-        <p className=' text-sm font-medium '>Đổi Mật Khẩu</p>
+        <p className=' text-sm font-medium '>{t('change-password')}</p>
       </NavLink>
       <NavLink
         to={`${router.userStatusCart}?status=0`}
@@ -72,7 +74,7 @@ export default function Sidebar() {
         }
       >
         <img src={cart_icon} alt='icon' className=' h-[20px] w-[20px] shrink-0 object-cover' />
-        <p className=' text-sm font-medium '>Đơn Mua</p>
+        <p className=' text-sm font-medium '>{t('my-purchase')}</p>
       </NavLink>
     </aside>
   )

@@ -34,5 +34,11 @@
     "price": "Price",
     "from-low": "Low to High",
     "from-high": "High to Low"
+  },
+  "footer": {
+    "rights": "All rights reserved.",
+    "location": "Country & Region",
+    "company": "Company Limited",
+    "address": "Address: Floor 4-5-6, Capital Place Building, 29 Lieu Giai Street, Ngoc Khanh Ward, Ba Dinh District, Hanoi City, Vietnam. Support Call Center: 19001221 - Email: cskh@hotro.shopee.vn Responsible for Content Management: Nguyen Duc Tri - Contact phone: 024 73081221 (ext 4678) Business code: 0106773786 by Department of Planning & Hanoi Investment first granted on 10/02/2015 © 2015 - Copyright belongs to Shopee Co., Ltd"
   }
 }

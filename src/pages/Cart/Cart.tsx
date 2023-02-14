@@ -2,6 +2,7 @@ import { useMutation } from '@tanstack/react-query'
 import produce from 'immer'
 import _ from 'lodash'
 import React, { useContext, useMemo, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { purchasesApi } from 'src/apis/purchases.api'
@@ -10,7 +11,9 @@ import QuantityController from 'src/components/QuantityController/QuantityContro
 import { PurchasesContext } from 'src/context/purchasesCart.context'
 import { PurchasesAddItem, PurchasesCart, PurchasesCartExtended } from 'src/types/purchases.type'
 import empty_cart from '../../assets/cart.png'
+
 export default function Cart() {
+  const { t } = useTranslation('cart')
   const { purchasesCart, setPurchasesCart, quantityOnType, setQuantityOnType, refetch } = useContext(PurchasesContext)
   const timer = useRef<NodeJS.Timeout | number>(0)
   const updateCartMutation = useMutation({
@@ -120,12 +123,12 @@ export default function Cart() {
   }
   if (purchasesCart.length <= 0) {
     return (
-      <div className='justify-center flex flex-col items-center py-20'>
+      <div className='flex flex-col items-center justify-center py-20'>
         <img src={empty_cart} alt='empty_cart' width={100} />
-        <p className='mt-[20px] text-sm font-bold text-stone-400'>Giỏ hàng của bạn còn trống</p>
+        <p className='mt-[20px] text-sm font-bold text-stone-400'>{t('empty-cart')}</p>
         <Link to='/'>
-          <MainButton className='text-md justify-center mt-[20px] flex h-[36px] w-[160px] items-center uppercase'>
-            Mua ngay
+          <MainButton className='text-md mt-[20px] flex h-[36px] w-[160px] items-center justify-center uppercase'>
+            {t('go-shopping')}
           </MainButton>
         </Link>
       </div>
@@ -142,14 +145,14 @@ export default function Cart() {
               checked={isCheckedAll}
               onChange={handleChangeCheckedAll}
             />
-            <div>Sản Phẩm</div>
+            <div>{t('product')}</div>
           </div>
           <div className='col-span-7'>
             <div className='grid grid-cols-5 text-stone-500'>
-              <div className='col-span-2 text-center'>Đơn giá</div>
-              <div className='col-span-1 text-center'>Số lượng</div>
-              <div className='col-span-1 text-center'>Số tiền</div>
-              <div className='col-span-1 text-center'>Thao tác</div>
+              <div className='col-span-2 text-center'>{t('unit-price')}</div>
+              <div className='col-span-1 text-center'>{t('quantity')}</div>
+              <div className='col-span-1 text-center'>{t('total-price')}</div>
+              <div className='col-span-1 text-center'>{t('actions')}</div>
             </div>
           </div>
         </div>
@@ -181,13 +184,13 @@ export default function Cart() {
                   </div>
                   <div className='col-span-7'>
                     <div className='grid h-full grid-cols-5 '>
-                      <div className='justify-center col-span-2 flex items-center gap-4'>
+                      <div className='col-span-2 flex items-center justify-center gap-4'>
                         <p className='text-stone-500 line-through'>
                           ₫{new Intl.NumberFormat('de-DE').format(e.price_before_discount)}
                         </p>
                         <p>₫{new Intl.NumberFormat('de-DE').format(e.price)}</p>
                       </div>
-                      <div className='justify-center col-span-1 flex items-center'>
+                      <div className='col-span-1 flex items-center justify-center'>
                         <QuantityController
                           max={e.product.quantity}
                           quantity={quantityOnTypeValue[index]}
@@ -195,14 +198,14 @@ export default function Cart() {
                           handleOnType={handleOnType(e.product._id, index)}
                         />
                       </div>
-                      <div className='justify-center col-span-1 flex items-center text-primary'>
+                      <div className='col-span-1 flex items-center justify-center text-primary'>
                         ₫{new Intl.NumberFormat('de-DE').format(e.price * e.buy_count)}
                       </div>
                       <button
-                        className='justify-center col-span-1 flex items-center hover:text-primary'
+                        className='col-span-1 flex items-center justify-center hover:text-primary'
                         onClick={() => handleDeletePurchases(e._id)}
                       >
-                        Xoá
+                        {t('delete')}
                       </button>
                     </div>
                   </div>
@@ -219,9 +222,11 @@ export default function Cart() {
                 checked={isCheckedAll}
                 onChange={handleChangeCheckedAll}
               />
-              <div className='text-[16px]'>Chọn Tất Cả ({purchasesCart.length})</div>
+              <div className='text-[16px]'>
+                {t('select-all')} ({purchasesCart.length})
+              </div>
               <button className='text-[16px]' onClick={() => handleDeletePurchases()}>
-                Xoá
+                {t('delete')}
               </button>
             </div>
           </div>
@@ -229,11 +234,13 @@ export default function Cart() {
             <div className='grid grid-cols-5 gap-4'>
               <div className='col-span-3 flex flex-col justify-between'>
                 <div className='gap flex items-center justify-end gap-2'>
-                  <p className='text-[16px]'>Tổng thanh toán sản phẩm ({cartPurchaseCheckedList.length}): </p>
+                  <p className='text-[16px]'>
+                    {t('total')} ({cartPurchaseCheckedList.length} {t('item')}):{' '}
+                  </p>
                   <p className='text-[24px] text-primary'>₫{new Intl.NumberFormat('de-DE').format(totalMoney)}</p>
                 </div>
                 <div className='flex justify-end gap-4'>
-                  <p>Tiết kiệm</p>
+                  <p>{t('saved')}</p>
                   <p className='text-primary'>
                     {Intl.NumberFormat('en', { notation: 'compact' }).format(totalMoneyDiscount).toLowerCase()}
                   </p>
@@ -241,7 +248,7 @@ export default function Cart() {
               </div>
               <div className='col-span-2'>
                 <MainButton className='!w-full' onClick={handleBuyPurchases}>
-                  Mua hàng
+                  {t('check-out')}
                 </MainButton>
               </div>
             </div>

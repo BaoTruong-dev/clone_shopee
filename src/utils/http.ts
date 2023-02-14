@@ -10,6 +10,7 @@ class Http {
   constructor() {
     this.accessToken = getAccessTokenLS()
     this.refreshToken = getRefreshTokenLS()
+
     this.instance = axios.create({
       baseURL: URL,
       timeout: 10000,
@@ -47,10 +48,15 @@ class Http {
       },
       (error: any) => {
         const config = error.response?.config || {}
+        const { url } = config
         if (error.response.status === 422) {
           return Promise.reject(error)
-        } else if (error.response.status === 401 && error.response.data.data.name === 'EXPIRED_TOKEN') {
-          this.instance
+        } else if (
+          error.response.status === 401 &&
+          error.response.data.data.name === 'EXPIRED_TOKEN' &&
+          url !== 'refresh-access-token'
+        ) {
+          return this.instance
             .post('refresh-access-token', {
               refresh_token: this.refreshToken
             })
