@@ -3,8 +3,14 @@ import { User } from 'src/types/user.type'
 export const saveAccessTokenLS = (access_token: string) => {
   return localStorage.setItem('access_token', access_token)
 }
+export const saveRefreshTokenLS = (access_token: string) => {
+  return localStorage.setItem('refresh_token', access_token)
+}
 export const getAccessTokenLS = () => {
   return localStorage.getItem('access_token') || ''
+}
+export const getRefreshTokenLS = () => {
+  return localStorage.getItem('refresh_token') || ''
 }
 
 export const saveUserInfoLS = (user_info: User) => {

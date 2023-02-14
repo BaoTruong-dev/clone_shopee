@@ -6,10 +6,12 @@ import { BrowserRouter } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import App from './App'
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary'
 // eslint-disable-next-line import/no-unresolved
 import { AuthProvider } from './context/auth.context'
 import { PurchasesProvider } from './context/purchasesCart.context'
 import './index.css'
+import './i18n/i18n'
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -24,7 +26,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <PurchasesProvider>
-            <App />
+            <ErrorBoundary>
+              <App />
+            </ErrorBoundary>
           </PurchasesProvider>
         </AuthProvider>
         <ToastContainer autoClose={1000} />

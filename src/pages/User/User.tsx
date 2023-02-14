@@ -5,9 +5,7 @@ export default function User() {
   return (
     <div className='mt-[20px]'>
       <div className='grid grid-cols-12 container'>
-        <div className='col-span-2 pt-[20px]'>
-          <Sidebar />
-        </div>
+        <Sidebar />
         <div className='col-span-10 '>
           <Outlet />
         </div>

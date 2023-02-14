@@ -6,6 +6,8 @@ import MainButton from 'src/components/MainButton/MainButton'
 import { router } from 'src/constant/router'
 import useQueryString from 'src/hooks/useQueryString'
 import { PurchasesStatus } from '../../../../types/purchases.type'
+import empty_purchase from '../../../../assets/empty_status.png'
+
 const statusRouter = [
   { name: 'Tất cả', status: 0 },
   { name: 'Chờ xác nhận', status: 1 },
@@ -19,15 +21,16 @@ export default function StatusCart() {
   const { status } = useQueryString()
 
   const { data } = useQuery({
-    queryKey: ['purchaseStatus', { status }],
+    queryKey: ['purchaseStatus', { status: status || 0 }],
     queryFn: () => purchasesApi.getCart(Number(status) as PurchasesStatus),
-    staleTime: 3 * 60 * 1000
+    refetchOnMount: true,
+    staleTime: 100
   })
   const purchaseList = data?.data.data
 
   return (
     <div>
-      <div className='sticky top-0 grid grid-cols-6 rounded-sm shadow-md'>
+      <div className='sticky top-0 mb-4 grid grid-cols-6 overflow-scroll rounded-sm shadow-md'>
         {statusRouter.map((e, index) => {
           return (
             <Link
@@ -47,7 +50,7 @@ export default function StatusCart() {
       </div>
       {purchaseList && purchaseList.length > 0 ? (
         purchaseList.map((e) => {
-          const link = `${e.product.name.replace(
+          const link = `/${e.product.name.replace(
             // eslint-disable-next-line no-useless-escape
             /\s|!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g,
             ''
@@ -55,7 +58,7 @@ export default function StatusCart() {
           return (
             <div className='mb-4 rounded-sm px-3 py-6 text-sm shadow-md' key={e._id}>
               <div className='flex justify-between border border-stone-200 px-5 py-4'>
-                <Link to={`/${link}`} className='flex gap-4'>
+                <Link to={link} className='flex gap-4'>
                   <img
                     src={e.product.image}
                     alt={e.product.name}
@@ -100,7 +103,10 @@ export default function StatusCart() {
           )
         })
       ) : (
-        <div></div>
+        <div className='flex h-[600px] flex-col items-center justify-center gap-[20px] rounded-sm shadow-md'>
+          <img src={empty_purchase} alt='purchase' width={100} height={100} />
+          <p className='text-[18px]'>Chưa có đơn hàng</p>
+        </div>
       )}
     </div>
   )

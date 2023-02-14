@@ -1,22 +1,25 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import classNames from 'classnames'
+import i18next from 'i18next'
 import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
 import authApi from 'src/apis/auth.api'
 import { purchasesApi } from 'src/apis/purchases.api'
 import { AuthContext } from 'src/context/auth.context'
 import useQueryConfig, { ConfigURL } from 'src/hooks/useQueryConfig'
 import schema, { SchemaType } from 'src/schema/schema'
-import { router } from '../../constant/router'
-import empty_cart from '../../assets/cart.png'
-import Popover from '../Popover/Popover'
-import userApi from 'src/apis/user.api'
 import { getUrlAvatar } from 'src/utils/utils'
+import empty_cart from '../../assets/cart.png'
+import { router } from '../../constant/router'
+import Popover from '../Popover/Popover'
 
 const schemaName = schema.pick(['name'])
 type FormData = Pick<SchemaType, 'name'>
 export default function Header() {
+  const { t } = useTranslation()
   const { setIsAuthenticated, userInfo, setUserInfo, isAuthenticated } = useContext(AuthContext)
   const queryClient = useQueryClient()
   const navigate = useNavigate()
@@ -52,7 +55,9 @@ export default function Header() {
       search: `${queryString}`
     })
   }
-
+  const onChangeLang = (name: string) => {
+    i18next.changeLanguage(name)
+  }
   return (
     <div className='bg-primary py-[10px] text-white'>
       <div className='container'>
@@ -60,8 +65,26 @@ export default function Header() {
           <Popover
             contentElement={
               <>
-                <p className='w-[200px] cursor-pointer p-[10px] transition-[0.4s] hover:text-primary'>Tiếng Việt</p>
-                <p className='w-[200px] cursor-pointer p-[10px] transition-[0.4s] hover:text-primary'>Tiếng Anh</p>
+                <div
+                  className={classNames('w-[200px] cursor-pointer p-[10px] transition-[0.4s] hover:text-primary', {
+                    'text-primary': i18next.language === 'vi'
+                  })}
+                  onClick={() => onChangeLang('vi')}
+                  role='button'
+                  tabIndex={0}
+                >
+                  {t('language-vi')}
+                </div>
+                <div
+                  className={classNames('w-[200px] cursor-pointer p-[10px] transition-[0.4s] hover:text-primary', {
+                    'text-primary': i18next.language === 'en'
+                  })}
+                  role='button'
+                  tabIndex={0}
+                  onClick={() => onChangeLang('en')}
+                >
+                  {t('language-en')}
+                </div>
               </>
             }
           >
@@ -80,7 +103,7 @@ export default function Header() {
                   d='M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418'
                 />
               </svg>
-              <p className='mx-[4px]'>Tiếng Việt</p>
+              <p className='mx-[4px]'>{t(`language-${i18next.language}`)}</p>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 fill='none'
@@ -105,7 +128,10 @@ export default function Header() {
                   <Link to={router.user} className='p-[10px] hover:bg-slate-100 hover:text-secondary'>
                     Tài khoản của tôi
                   </Link>
-                  <Link to='/cart' className='p-[10px]  hover:bg-slate-100 hover:text-secondary'>
+                  <Link
+                    to={`${router.userStatusCart}?status=0`}
+                    className='p-[10px]  hover:bg-slate-100 hover:text-secondary'
+                  >
                     Đơn mua
                   </Link>
                   <Link
@@ -228,7 +254,7 @@ export default function Header() {
             isOptionPlace
             origin='95%'
           >
-            <Link to='/' className='relative'>
+            <div className='relative'>
               <div className='absolute top-[-8px] right-[-10px] rounded-full bg-white px-2 text-xs text-primary shadow-sm'>
                 {cartInfo && cartInfo.data.data.length > 0 && cartInfo.data.data.length}
               </div>
@@ -246,7 +272,7 @@ export default function Header() {
                   d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z'
                 />
               </svg>
-            </Link>
+            </div>
           </Popover>
         </div>
       </div>

@@ -15,8 +15,8 @@ export default function Sidebar() {
   const { userInfo } = useContext(AuthContext)
 
   return (
-    <aside className='w-full'>
-      <div className='flex w-full gap-4'>
+    <aside className='col-span-2 pt-[20px]'>
+      <div className='flex gap-3'>
         <img
           src={getUrlAvatar(userInfo?.avatar)}
           alt='avatar'
@@ -25,23 +25,17 @@ export default function Sidebar() {
           // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
           role='button'
         />
-        <Link to={router.user} className=' text-sm'>
-          <p className='mb-[4px] font-bold line-clamp-1'>{userInfo?.email}</p>
+        <Link to={router.user} className='w-[60%]'>
+          <p className='truncate text-sm font-bold'>{userInfo?.email}</p>
           <div className='flex items-center'>
-            <svg
-              width={12}
-              height={12}
-              viewBox='0 0 12 12'
-              xmlns='http://www.w3.org/2000/svg'
-              style={{ marginRight: 4 }}
-            >
+            <svg width={12} height={12} viewBox='0 0 12 12' xmlns='http://www.w3.org/2000/svg'>
               <path
                 d='M8.54 0L6.987 1.56l3.46 3.48L12 3.48M0 8.52l.073 3.428L3.46 12l6.21-6.18-3.46-3.48'
                 fill='#9B9B9B'
                 fillRule='evenodd'
               />
             </svg>
-            <div className='text-gray-500 '>Sửa Hồ Sơ</div>
+            <div className='ml-[4px] text-sm text-gray-500'>Sửa Hồ Sơ</div>
           </div>
         </Link>
       </div>
