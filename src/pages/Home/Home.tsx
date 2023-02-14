@@ -11,7 +11,6 @@ import SortProducts from './SortProducts/SortProducts'
 import empty_box from '../../assets/empty-box.png'
 export default function Home() {
   const queryConfig: ConfigURL = useQueryConfig()
-
   const { data: productsData } = useQuery({
     queryKey: ['products', queryConfig],
     queryFn: () => {

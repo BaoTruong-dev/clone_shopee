@@ -1,0 +1,44 @@
+{
+  "header": {
+    "language-vi": "Tiếng Việt",
+    "language-en": "Tiếng Anh",
+    "register": "Đăng Ký",
+    "login": "Đăng Nhập",
+    "user": "Tài Khoản Của Tôi",
+    "purchase": "Đơn Mua",
+    "logout": "Đăng Xuất",
+    "cart-add-item": "Sản phẩm mới thêm",
+    "cart-view": "Xem Giỏ Hàng",
+    "cart-add-item-already": "Đã Thêm Vào Giỏ Hàng",
+    "cart-empty": "Chưa Có Sản Phẩm"
+  },
+  "aside-filter": {
+    "all-category": "Tất Cả Danh Mục",
+    "t-shirt": "Áo thun",
+    "clock": "Đồng hồ",
+    "phone": "Điện thoại",
+    "search-filter": "BỘ LỌC TÌM KIẾM",
+    "price-range": "Khoảng Giá",
+    "from": "TỪ",
+    "to": "ĐẾN",
+    "apply": "ÁP DỤNG",
+    "rating": "Đánh Giá",
+    "up": "Trở Lên",
+    "clear-all": "XOÁ TẤT CẢ"
+  },
+  "home-sort": {
+    "sort-by": "Sort by",
+    "latest": "Mới Nhất",
+    "popular": "Phổ Biến",
+    "top-sales": "Bán Chạy",
+    "price": "Giá",
+    "from-low": "Thấp đến Cao",
+    "from-high": "Cap đến thấp"
+  },
+  "footer": {
+    "rights": "Tất cả các quyền được bảo lưu.",
+    "location": "Quốc gia & Khu vực",
+    "company": "Công ty TNHH",
+    "address": "Địa chỉ: Tầng 4-5-6, Tòa nhà Capital Place, số 29 đường Liễu Giai, Phường Ngọc Khánh, Quận Ba Đình, Thành phố Hà Nội, Việt Nam. Tổng đài hỗ trợ: 19001221 - Email: cskh@hotro.shopee.vn Chịu Trách Nhiệm Quản Lý Nội Dung: Nguyễn Đức Trí - Điện thoại liên hệ: 024 73081221 (ext 4678) Mã số doanh nghiệp: 0106773786 do Sở Kế hoạch & Đầu tư TP Hà Nội cấp lần đầu ngày 10/02/2015 © 2015 - Bản quyền thuộc về Công ty TNHH Shopee"
+  }
+}

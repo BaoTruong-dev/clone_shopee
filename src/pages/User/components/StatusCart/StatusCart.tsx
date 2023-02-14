@@ -7,19 +7,19 @@ import { router } from 'src/constant/router'
 import useQueryString from 'src/hooks/useQueryString'
 import { PurchasesStatus } from '../../../../types/purchases.type'
 import empty_purchase from '../../../../assets/empty_status.png'
-
-const statusRouter = [
-  { name: 'Tất cả', status: 0 },
-  { name: 'Chờ xác nhận', status: 1 },
-  { name: 'Chờ lấy hàng', status: 2 },
-  { name: 'Đang giao', status: 3 },
-  { name: 'Đã giao', status: 4 },
-  { name: 'Đã huỷ', status: 5 }
-]
+import { useTranslation } from 'react-i18next'
 
 export default function StatusCart() {
+  const { t } = useTranslation('profile')
   const { status } = useQueryString()
-
+  const statusRouter = [
+    { name: t('purchase-page.all'), status: 0 },
+    { name: t('purchase-page.confirm'), status: 1 },
+    { name: t('purchase-page.delivery'), status: 2 },
+    { name: t('purchase-page.take'), status: 3 },
+    { name: t('purchase-page.completed'), status: 4 },
+    { name: t('purchase-page.cancelled'), status: 5 }
+  ]
   const { data } = useQuery({
     queryKey: ['purchaseStatus', { status: status || 0 }],
     queryFn: () => purchasesApi.getCart(Number(status) as PurchasesStatus),
@@ -91,13 +91,13 @@ export default function StatusCart() {
                     fill='#fff'
                   />
                 </svg>
-                <p className='ml-[4px]'>Thành tiền: </p>
+                <p className='ml-[4px]'>{t('purchase-page.order-total')}: </p>
                 <p className='ml-[10px] text-[24px] text-primary'>
                   ₫{new Intl.NumberFormat('de-DE').format(e.price * e.buy_count)}
                 </p>
               </div>
               <Link to={link} className='flex items-center justify-end'>
-                <MainButton className='!w-[200px]'>Mua lại</MainButton>
+                <MainButton className='!w-[200px]'>{t('purchase-page.button')}</MainButton>
               </Link>
             </div>
           )
@@ -105,7 +105,7 @@ export default function StatusCart() {
       ) : (
         <div className='flex h-[600px] flex-col items-center justify-center gap-[20px] rounded-sm shadow-md'>
           <img src={empty_purchase} alt='purchase' width={100} height={100} />
-          <p className='text-[18px]'>Chưa có đơn hàng</p>
+          <p className='text-[18px]'>{t('purchase-page.empty-order')}</p>
         </div>
       )}
     </div>

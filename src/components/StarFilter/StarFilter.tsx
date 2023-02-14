@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { router } from 'src/constant/router'
 import { ConfigURL } from 'src/hooks/useQueryConfig'
 
-export default function StarFilter({ queryConfig }: { queryConfig: ConfigURL }) {
+export default function StarFilter({ queryConfig, text }: { queryConfig: ConfigURL; text: string }) {
   const navigate = useNavigate()
   const handleFilterStar = (star: string) => {
     const queryString = new URLSearchParams({
@@ -83,7 +83,7 @@ export default function StarFilter({ queryConfig }: { queryConfig: ConfigURL }) 
                       )
                     })}
                 </div>
-                <p>{index > 0 && 'Trở lên'}</p>
+                <p>{index > 0 && text}</p>
               </div>
             </div>
           )

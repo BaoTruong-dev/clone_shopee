@@ -3,6 +3,7 @@ import { useMutation } from '@tanstack/react-query'
 import classNames from 'classnames'
 import _ from 'lodash'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 import userApi from 'src/apis/user.api'
 import Input from 'src/components/Input/Input'
@@ -12,6 +13,7 @@ export type PasswordUpdate = Pick<UserSchemaType, 'password' | 'new_password' | 
 const schemaPassword = userSchema.omit(['address', 'date_of_birth', 'name', 'phone', 'avatar'])
 
 export default function ChangePassword() {
+  const { t } = useTranslation('profile')
   const {
     register,
     handleSubmit,
@@ -40,10 +42,8 @@ export default function ChangePassword() {
   return (
     <div className='rounded-sm p-[20px] text-sm shadow-md'>
       <div className='h-[68px]'>
-        <p className='text-[18px] font-medium'>Đổi Mật Khẩu</p>
-        <p className='mt-[10px] text-sm text-gray-600'>
-          Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu cho người khác
-        </p>
+        <p className='text-[18px] font-medium'>{t('password-page.title')}</p>
+        <p className='mt-[10px] text-sm text-gray-600'>{t('password-page.description')}</p>
       </div>
       <div className='mb-[40px] h-[1px] w-full bg-gray-100'></div>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -78,7 +78,9 @@ export default function ChangePassword() {
           <div className='my-[30px] flex items-center gap-6'>
             <p className='w-[15%]'></p>
             <div className='flex-grow'>
-              <MainButton className={classNames({ 'bg-primary/70': _.values(errors).length > 0 })}>Xác Nhận</MainButton>
+              <MainButton className={classNames({ 'bg-primary/70': _.values(errors).length > 0 })}>
+                {t('password-page.button')}
+              </MainButton>
             </div>
           </div>
         </div>

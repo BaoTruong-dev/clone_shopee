@@ -4,6 +4,7 @@ import classNames from 'classnames'
 import { log } from 'console'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 import userApi from 'src/apis/user.api'
 import Input from 'src/components/Input/Input'
@@ -18,6 +19,7 @@ import DateSelect from '../DateSelect/DateSelect'
 export type DataUpdate = Pick<UserSchemaType, 'address' | 'date_of_birth' | 'name' | 'phone' | 'avatar'>
 const schema = userSchema.omit(['password', 'new_password', 'confirm_new_password'])
 export default function Profile() {
+  const { t } = useTranslation('profile')
   const { userInfo, setUserInfo, avatarFile, setAvatarFile } = useContext(AuthContext)
   const avatarRef = useRef<HTMLInputElement>(null)
 
@@ -99,8 +101,8 @@ export default function Profile() {
   return (
     <div className='rounded-sm p-[20px] text-sm shadow-md'>
       <div className='h-[68px]'>
-        <p className='text-[18px] font-medium'>Hồ Sơ Của Tôi</p>
-        <p className='mt-[10px] text-sm text-gray-600'>Quản lý thông tin hồ sơ để bảo mật tài khoản</p>
+        <p className='text-[18px] font-medium'>{t('info-page.title')}</p>
+        <p className='mt-[10px] text-sm text-gray-600'>{t('info-page.description')}</p>
       </div>
       <div className='mb-[40px] h-[1px] w-full bg-gray-100'></div>
       <form className='flex gap-[50px]' onSubmit={handleSubmit(handleFormSubmit)}>
@@ -137,7 +139,7 @@ export default function Profile() {
           <div className='my-[30px] flex items-center gap-6'>
             <p className='w-[15%]'></p>
             <div className='flex-grow'>
-              <MainButton className={classNames({ 'bg-primary/70': !isDirty })}>Lưu</MainButton>
+              <MainButton className={classNames({ 'bg-primary/70': !isDirty })}>{t('info-page.button')}</MainButton>
             </div>
           </div>
         </div>
@@ -155,9 +157,9 @@ export default function Profile() {
             onClick={() => avatarRef.current?.click()}
             type='button'
           >
-            Chọn Ảnh
+            {t('info-page.select-image')}
           </button>
-          <p className='text-center text-sm text-[#999999]'>Dụng lượng file tối đa 1 MB Định dạng: .JPEG, .PNG</p>
+          <p className='text-center text-sm text-[#999999]'>{t('info-page.limited-file')}</p>
         </div>
       </form>
     </div>

@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import classNames from 'classnames'
 import React, { useContext, useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { productApi } from 'src/apis/product.api'
@@ -13,6 +14,7 @@ import { AuthContext } from 'src/context/auth.context'
 import { PurchasesAddItem } from 'src/types/purchases.type'
 import { handlePercent } from 'src/utils/utils'
 export default function ProductDetail() {
+  const { t } = useTranslation('product')
   const [quantity, setQuantity] = useState<number>(1)
   const [slideRange, setSlideRange] = useState<number[]>([0, 5])
   const [activeImage, setActiveImage] = useState<string>('')
@@ -47,7 +49,11 @@ export default function ProductDetail() {
       return purchasesApi.addToCart(formData)
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['purchases', { status: -1 }] })
+      toast.success('Đã thêm vào giỏ hàng')
+      queryClient.removeQueries({ queryKey: ['purchases', { status: -1 }] })
+    },
+    onError: (error) => {
+      console.log(error)
     }
   })
 
@@ -62,12 +68,12 @@ export default function ProductDetail() {
         {
           product_id: id,
           buy_count: quantity
-        },
-        {
-          onSuccess: () => {
-            toast.success('Đã thêm vào giỏ hàng')
-          }
         }
+        // {
+        //   onSuccess: () => {
+        //     toast.success('Đã thêm vào giỏ hàng')
+        //   }
+        // }
       )
     } else {
       navigate('/login')
@@ -193,12 +199,12 @@ export default function ProductDetail() {
                   <span className='underline underline-offset-4'>
                     {Intl.NumberFormat('en', { notation: 'compact' }).format(product.view).toLowerCase()}
                   </span>
-                  <span className='ml-2 inline-block text-[14px] text-[#767676]'>Đánh Giá</span>
+                  <span className='ml-2 inline-block text-[14px] text-[#767676]'>{t('rating')}</span>
                 </div>
                 <div className='mx-4 h-[100%] w-[1px] bg-grey'></div>
                 <div>
                   <span>{Intl.NumberFormat('en', { notation: 'compact' }).format(product.sold).toLowerCase()}</span>
-                  <span className='ml-2 inline-block  text-[#767676]'>Đã Bán</span>
+                  <span className='ml-2 inline-block  text-[#767676]'>{t('sold')}</span>
                 </div>
               </div>
             </div>
@@ -210,11 +216,13 @@ export default function ProductDetail() {
                 <div className='ml-[10px] mr-[15px] text-[30px] font-[500] text-primary'>
                   ₫{new Intl.NumberFormat('de-DE').format(product.price)}
                 </div>
-                <div className='bg-primary px-[5px] text-xs font-bold uppercase text-white'>{percent} giảm</div>
+                <div className='bg-primary px-[5px] text-xs font-bold uppercase text-white'>
+                  {percent} {t('sale')}
+                </div>
               </div>
             </div>
             <div className='h0fu mt-[30px] flex h-[32px] items-center'>
-              <p className='mr-[40px] text-sm text-[#757575]'>Số Lượng</p>
+              <p className='mr-[40px] text-sm text-[#757575]'>{t('quantity')}</p>
               <QuantityController
                 quantity={quantity}
                 max={product.quantity}
@@ -223,7 +231,7 @@ export default function ProductDetail() {
               />
               <div className='ml-[15px] flex gap-1 text-sm text-[#757575]'>
                 <p>{product.quantity}</p>
-                <p>sản phẩm có sẵn</p>
+                <p>{t('available')}</p>
               </div>
             </div>
             <div className='mt-[30px] flex items-center gap-4'>
@@ -243,24 +251,24 @@ export default function ProductDetail() {
                       d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z'
                     />
                   </svg>
-                  <p>Thêm Vào Giỏ Hàng</p>
+                  <p>{t('add-to-cart')}</p>
                 </div>
               </MainButton>
               <MainButton className='border border-primary' onClick={() => handleBuyNow(quantity, _id)}>
-                Mua ngay
+                {t('buy-now')}
               </MainButton>
             </div>
           </div>
         </div>
         <div className='mt-[15px] p-[25px] shadow-md'>
-          <div className='bg-[#fafafa] p-[15px] text-[18px]'>MÔ TẢ SẢN PHẨM</div>
+          <div className='bg-[#fafafa] p-[15px] text-[18px] uppercase'>{t('product-description')}</div>
           <div
             dangerouslySetInnerHTML={{ __html: product.description }}
             className='mt-[30px] text-sm leading-[24px]'
           ></div>
         </div>
         <div className='mt-[50px]'>
-          <p className='mb-[20px] font-[500] text-[#808080]'>CÓ THỂ BẠN CŨNG THÍCH</p>
+          <p className='mb-[20px] font-[500] text-[#808080]'>{t('also-like')}</p>
           <div className='grid  grid-cols-5 gap-4'>
             {productsRelative &&
               productsRelative.data.data.products.map((e) => <ProductItem product={e} key={e._id} />)}

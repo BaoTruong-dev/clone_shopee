@@ -1,0 +1,15 @@
+{
+  "product": "Sản Phẩm",
+  "unit-price": "Đơn Giá",
+  "quantity": "Số Lượng",
+  "total-price": "Số tiền",
+  "actions": "Thao Tác",
+  "delete": "Xoá",
+  "select-all": "Chọn Tất Cả",
+  "total": "Tổng thanh toán",
+  "item": "Sản phẩm",
+  "saved": "Tiết kiệm",
+  "check-out": "Mua Hàng",
+  "empty-cart": "Giỏ hàng của bạn còn trống",
+  "go-shopping": "MUA NGAY"
+}

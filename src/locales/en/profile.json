@@ -1,0 +1,29 @@
+{
+  "edit-profile": "Edit Profile",
+  "my-account": "My Account",
+  "change-password": "Change Password",
+  "my-purchase": "My Purchase",
+  "info-page": {
+    "title": "My Profile",
+    "description": "Manage and protect your account",
+    "select-image": "Select Image",
+    "limited-file": "File size: maximum 1 MB File extension: .JPEG, .PNG",
+    "button": "Save"
+  },
+  "password-page": {
+    "title": "Change Password",
+    "description": "For your account's security, do not share your password with anyone else",
+    "button": "Confirm"
+  },
+  "purchase-page": {
+    "all": "All",
+    "confirm": "Confirmation",
+    "take": "Take Products",
+    "delivery": "Delivering",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "order-total": "Order Total",
+    "button": "Buy Again",
+    "empty-order": "No orders yet"
+  }
+}

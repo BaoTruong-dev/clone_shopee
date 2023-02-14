@@ -1,0 +1,29 @@
+{
+  "edit-profile": "Sửa Hồ Sơ",
+  "my-account": "Tài Khoản Của Tôi",
+  "change-password": "Đổi Mật Khẩu",
+  "my-purchase": "Đơn Mua",
+  "info-page": {
+    "title": "Hồ Sơ Của Tôi",
+    "description": "Quản lý thông tin hồ sơ để bảo mật tài khoản",
+    "select-image": "Chọn Ảnh",
+    "limited-file": "Dụng lượng file tối đa 1 MB Định dạng: .JPEG, .PNG",
+    "button": "Lưu"
+  },
+  "password-page": {
+    "title": "Đổi Mật Khẩu",
+    "description": "Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu cho người khác",
+    "button": "Xác Nhận"
+  },
+  "purchase-page": {
+    "all": "Tất cả",
+    "confirm": "Chờ xác nhận",
+    "take": "Chờ lấy hàng",
+    "delivery": "Đang giao",
+    "completed": "Đã giao",
+    "cancelled": "Đã huỷ",
+    "order-total": "Thành tiền",
+    "button": "Mua lại",
+    "empty-order": "Chưa có đơn hàng"
+  }
+}

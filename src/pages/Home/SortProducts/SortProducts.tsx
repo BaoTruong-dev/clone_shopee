@@ -1,9 +1,10 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import classNames from 'classnames'
+import _ from 'lodash'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import MainButton from 'src/components/MainButton/MainButton'
 import { router } from 'src/constant/router'
-import _ from 'lodash'
 import { ConfigURL } from 'src/hooks/useQueryConfig'
 interface SortProps {
   queryConfig: ConfigURL
@@ -12,7 +13,7 @@ interface SortProps {
 
 export default function SortProducts({ queryConfig, pageSize }: SortProps) {
   const navigate = useNavigate()
-
+  const { t } = useTranslation('home')
   const page = Number(queryConfig.page)
   const checkActive = (value: string) => {
     return value === queryConfig.sort_by
@@ -47,24 +48,24 @@ export default function SortProducts({ queryConfig, pageSize }: SortProps) {
   return (
     <div className='flex flex-wrap items-center justify-between'>
       <div className='flex items-center gap-[10px]'>
-        <p className='shrink-0'>Sắp xếp theo</p>
+        <p className='shrink-0'>{t('home-sort.sort-by')}</p>
         <MainButton
           onClick={() => handleSortValue('sort_by', 'createdAt', 'order')}
           className={classNames('bg-white text-black', { '!bg-primary !text-white': checkActive('createdAt') })}
         >
-          Mới nhất
+          {t('home-sort.latest')}
         </MainButton>
         <MainButton
           onClick={() => handleSortValue('sort_by', 'view', 'order')}
           className={classNames('bg-white text-black', { '!bg-primary !text-white': checkActive('view') })}
         >
-          Phổ biến
+          {t('home-sort.popular')}
         </MainButton>
         <MainButton
           onClick={() => handleSortValue('sort_by', 'sold', 'order')}
           className={classNames('bg-white text-black', { '!bg-primary !text-white': checkActive('sold') })}
         >
-          Bán chạy
+          {t('home-sort.top-sales')}
         </MainButton>
         <select
           className={classNames(
@@ -75,10 +76,14 @@ export default function SortProducts({ queryConfig, pageSize }: SortProps) {
           onChange={handleSortPrice}
         >
           <option value='' disabled>
-            Giá
+            {t('home-sort.price')}
           </option>
-          <option value='asc'>Giá: Thấp đến Cao</option>
-          <option value='desc'>Giá: Cao đến Thấp</option>
+          <option value='asc'>
+            {t('home-sort.price')}: {t('home-sort.from-low')}
+          </option>
+          <option value='desc'>
+            {t('home-sort.price')}: {t('home-sort.from-high')}
+          </option>
         </select>
       </div>
       <div className='flex items-center'>
