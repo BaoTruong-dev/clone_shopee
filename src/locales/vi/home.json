@@ -4,6 +4,8 @@
     "language-en": "Tiếng Anh",
     "register": "Đăng Ký",
     "login": "Đăng Nhập",
+    "no-account": "Bạn chưa có tài khoản",
+    "have-account": "Bạn đã có tài khoản",
     "user": "Tài Khoản Của Tôi",
     "purchase": "Đơn Mua",
     "logout": "Đăng Xuất",

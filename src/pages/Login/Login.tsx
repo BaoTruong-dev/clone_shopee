@@ -9,12 +9,14 @@ import { router } from 'src/constant/router'
 import Input from 'src/components/Input/Input'
 import { AuthContext } from 'src/context/auth.context'
 import schema from 'src/schema/schema'
+import { useTranslation } from 'react-i18next'
 interface FormInputs {
   email: string
   password: string
 }
 
 export default function Login() {
+  const { t } = useTranslation(['home', 'form'])
   const navigate = useNavigate()
   const { setUserInfo, setIsAuthenticated } = useContext(AuthContext)
   const {
@@ -47,22 +49,27 @@ export default function Login() {
   return (
     <div className='min-h-[482px] w-[400px] rounded bg-white  py-[30px] px-[20px] shadow shadow-slate-300'>
       <form onSubmit={handleSubmit}>
-        <h2 className='mb-[30px] text-[20px]'>Đăng nhập</h2>
+        <h2 className='mb-[30px] text-[20px]'>{t('header.login')}</h2>
         <Input placeHover='Email' {...register('email')} error={errors.email?.message} />
-        <Input type='password' placeHover='Mật khẩu' {...register('password')} error={errors.password?.message} />
+        <Input
+          type='password'
+          placeHover={t('form:password')}
+          {...register('password')}
+          error={errors.password?.message}
+        />
         <button
           disabled={loginMutation.isLoading}
           className={`mt-[40px] w-full rounded-[2px] bg-primary py-[10px] px-[15px] text-white hover:bg-opacity-[0.8] ${
             loginMutation.isLoading ? 'bg-opacity-[0.8]' : ''
           }`}
         >
-          Đăng nhập
+          {t('header.login')}
         </button>
       </form>
       <div className='mt-5 text-center text-[14px]'>
-        <span className='text-slate-600'>Bạn chưa có tài khoản?</span>
+        <span className='text-slate-600'>{t('header.no-account')}?</span>
         <Link to='/register' className='ml-1 font-medium text-primary'>
-          Đăng ký
+          {t('header.register')}
         </Link>
       </div>
     </div>

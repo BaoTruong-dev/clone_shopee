@@ -14,6 +14,7 @@ const schemaPassword = userSchema.omit(['address', 'date_of_birth', 'name', 'pho
 
 export default function ChangePassword() {
   const { t } = useTranslation('profile')
+  const { t: form } = useTranslation('form')
   const {
     register,
     handleSubmit,
@@ -49,7 +50,7 @@ export default function ChangePassword() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className='flex-1'>
           <div className='mb-[10px] flex items-center gap-6'>
-            <p className='mb-[24px] w-[15%] text-right text-gray-500'>Mật Khẩu Hiện Tại</p>
+            <p className='mb-[24px] w-[15%] text-right text-gray-500'>{form('current-password')}</p>
             <Input
               className='!mb-0 w-[40%]'
               type='password'
@@ -58,7 +59,7 @@ export default function ChangePassword() {
             />
           </div>
           <div className='mb-[10px] flex items-center gap-6'>
-            <p className='mb-[24px] w-[15%] text-right text-gray-500'>Mật Khẩu Mới</p>
+            <p className='mb-[24px] w-[15%] text-right text-gray-500'>{form('new-password')}</p>
             <Input
               className='!mb-0 w-[40%]'
               type='password'
@@ -67,7 +68,7 @@ export default function ChangePassword() {
             />
           </div>
           <div className='mb-[10px] flex items-center gap-6'>
-            <p className='mb-[24px] w-[15%] text-right text-gray-500'>Xác Nhận Mật Khẩu</p>
+            <p className='mb-[24px] w-[15%] text-right text-gray-500'>{form('confirm-password')}</p>
             <Input
               className='!mb-0 w-[40%]'
               type='password'

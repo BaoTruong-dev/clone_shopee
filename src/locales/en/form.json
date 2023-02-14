@@ -1,0 +1,9 @@
+{
+  "password": "Password",
+  "current-password": "Current Password",
+  "new-password": "New Password",
+  "confirm-password": "Confirm Password",
+  "name": "Name",
+  "phone-number": "Phone Number",
+  "address": "Address"
+}

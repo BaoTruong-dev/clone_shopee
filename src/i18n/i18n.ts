@@ -9,6 +9,8 @@ import CART_EN from '../locales/en/cart.json'
 import CART_VI from '../locales/vi/cart.json'
 import PROFILE_VI from '../locales/vi/profile.json'
 import PROFILE_EN from '../locales/en/profile.json'
+import FORM_EN from '../locales/en/form.json'
+import FORM_VI from '../locales/vi/form.json'
 // the translations
 // (tip move them in a JSON file and import them,
 // or even better, manage them separated from your code: https://react.i18next.com/guides/multiple-translation-files)
@@ -17,13 +19,15 @@ export const resources = {
     home: HOME_EN,
     product: PRODUCT_EN,
     cart: CART_EN,
-    profile: PROFILE_EN
+    profile: PROFILE_EN,
+    form: FORM_EN
   },
   vi: {
     home: HOME_VI,
     product: PRODUCT_VI,
     cart: CART_VI,
-    profile: PROFILE_VI
+    profile: PROFILE_VI,
+    form: FORM_VI
   }
 }
 export const defaultNS = 'home'
@@ -35,7 +39,7 @@ i18n
     lng: language, // language to use, more information here: https://www.i18next.com/overview/configuration-options#languages-namespaces-resources
     // you can use the i18n.changeLanguage function to change the language manually: https://www.i18next.com/overview/api#changelanguage
     // if you're using a language detector, do not define the lng option
-    ns: ['home', 'product', 'cart', 'profile'],
+    ns: ['home', 'product', 'cart', 'profile', 'form'],
     defaultNS,
     interpolation: {
       escapeValue: false // react already safes from xss

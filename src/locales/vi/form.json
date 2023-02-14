@@ -1,0 +1,10 @@
+{
+  "password": "Mật Khẩu",
+  "current-password": "Mật Khẩu Hiện Tại",
+  "new-password": "Mật Khẩu Mới",
+  "confirm-password": "Xác Nhận Mật Khẩu",
+  "name": "Tên",
+  "phone-number": "Số Điện Thoại",
+  "address": "Địa Chỉ",
+  "date-of-birth": "Ngày Sinh"
+}

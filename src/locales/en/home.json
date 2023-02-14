@@ -4,6 +4,8 @@
     "language-en": "English",
     "register": "Sign Up",
     "login": "Login",
+    "no-account": "New to Shopee",
+    "have-account": "Have an account already",
     "user": "My Account",
     "purchase": "My Purchase",
     "logout": "Logout",

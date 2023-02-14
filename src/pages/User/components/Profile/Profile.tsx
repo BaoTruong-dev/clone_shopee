@@ -20,6 +20,7 @@ export type DataUpdate = Pick<UserSchemaType, 'address' | 'date_of_birth' | 'nam
 const schema = userSchema.omit(['password', 'new_password', 'confirm_new_password'])
 export default function Profile() {
   const { t } = useTranslation('profile')
+  const { t: form } = useTranslation('form')
   const { userInfo, setUserInfo, avatarFile, setAvatarFile } = useContext(AuthContext)
   const avatarRef = useRef<HTMLInputElement>(null)
 
@@ -108,23 +109,23 @@ export default function Profile() {
       <form className='flex gap-[50px]' onSubmit={handleSubmit(handleFormSubmit)}>
         <div className='flex-1'>
           <div className='mb-[30px] flex gap-6'>
-            <p className='w-[15%] text-right text-gray-500'>Email</p>
+            <p className='w-[20%] text-right text-gray-500'>Email</p>
             <p className='flex-1'>{userInfo?.email}</p>
           </div>
           <div className='mb-[10px] flex items-center gap-6'>
-            <p className='mb-[24px] w-[15%] text-right text-gray-500'>Tên</p>
+            <p className='mb-[24px] w-[20%] text-right text-gray-500'>{form('name')}</p>
             <Input className='!mb-0 flex-1' {...register('name')} error={errors.name?.message} />
           </div>
           <div className='mb-[10px] flex items-center gap-6'>
-            <p className='mb-[24px] w-[15%] text-right text-gray-500'>Số Điện Thoại</p>
+            <p className='mb-[24px] w-[20%] text-right text-gray-500'>{form('phone-number')}</p>
             <Input className='!mb-0 flex-1' {...register('phone')} error={errors.phone?.message} />
           </div>
           <div className='mb-[10px] flex items-center gap-6'>
-            <p className='mb-[24px] w-[15%] text-right text-gray-500'>Địa Chỉ</p>
+            <p className='mb-[24px] w-[20%] text-right text-gray-500'>{form('address')}</p>
             <Input className='!mb-0 flex-1' {...register('address')} error={errors.address?.message} />
           </div>
           <div className='mb-[10px] flex items-center gap-6'>
-            <p className='w-[15%] text-right text-gray-500'>Ngày Sinh</p>
+            <p className='w-[20%] text-right text-gray-500'>{form('date-of-birth')}</p>
             <Controller
               control={control}
               name='date_of_birth'
@@ -137,7 +138,7 @@ export default function Profile() {
             />
           </div>
           <div className='my-[30px] flex items-center gap-6'>
-            <p className='w-[15%]'></p>
+            <p className='w-[20%]'></p>
             <div className='flex-grow'>
               <MainButton className={classNames({ 'bg-primary/70': !isDirty })}>{t('info-page.button')}</MainButton>
             </div>
