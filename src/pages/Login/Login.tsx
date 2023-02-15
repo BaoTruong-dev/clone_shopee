@@ -10,6 +10,7 @@ import Input from 'src/components/Input/Input'
 import { AuthContext } from 'src/context/auth.context'
 import schema from 'src/schema/schema'
 import { useTranslation } from 'react-i18next'
+import { Helmet } from 'react-helmet-async'
 interface FormInputs {
   email: string
   password: string
@@ -48,6 +49,11 @@ export default function Login() {
   }
   return (
     <div className='min-h-[482px] w-[400px] rounded bg-white  py-[30px] px-[20px] shadow shadow-slate-300'>
+      <Helmet>
+        <title> {t('header.login')} | Clone Shopee</title>
+        <meta name='title' content='Đây là một dự án clone Shopee dùng cho mục đích học tập, và phi thương mại' />
+        <meta name='description' content='Đây là một dự án clone Shopee dùng cho mục đích học tập, và phi thương mại' />
+      </Helmet>
       <form onSubmit={handleSubmit}>
         <h2 className='mb-[30px] text-[20px]'>{t('header.login')}</h2>
         <Input placeHover='Email' {...register('email')} error={errors.email?.message} />

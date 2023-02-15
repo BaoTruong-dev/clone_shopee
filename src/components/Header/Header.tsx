@@ -184,7 +184,7 @@ export default function Header() {
             <input
               type='text'
               className='w-[90%] border-none text-sm text-black outline-none'
-              placeholder='Free ship đến 50%'
+              placeholder={t('header.search-placeholder')}
               {...register('name')}
             />
             <button type='submit' className='cursor-pointer bg-primary py-2 px-4'>

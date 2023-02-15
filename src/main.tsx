@@ -10,8 +10,8 @@ import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary'
 // eslint-disable-next-line import/no-unresolved
 import { AuthProvider } from './context/auth.context'
 import { PurchasesProvider } from './context/purchasesCart.context'
-import './index.css'
 import './i18n/i18n'
+import './index.css'
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

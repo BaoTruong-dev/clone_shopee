@@ -1,5 +1,6 @@
 import { useIsFetching, useIsMutating } from '@tanstack/react-query'
 import { lazy, Suspense, useContext, useEffect } from 'react'
+import { HelmetProvider } from 'react-helmet-async'
 import { Navigate, Outlet, useRoutes } from 'react-router-dom'
 import Modal from './components/Modal/Modal'
 import { router } from './constant/router'
@@ -141,19 +142,21 @@ function App() {
     }
   ])
   return (
-    <div className='App'>
-      {isMutating + isFetching !== 0 && (
-        <Modal>
-          <div className='lds-ellipsis'>
-            <div />
-            <div />
-            <div />
-            <div />
-          </div>
-        </Modal>
-      )}
-      {element}
-    </div>
+    <HelmetProvider>
+      <div className='App'>
+        {isMutating + isFetching !== 0 && (
+          <Modal>
+            <div className='lds-ellipsis'>
+              <div />
+              <div />
+              <div />
+              <div />
+            </div>
+          </Modal>
+        )}
+        {element}
+      </div>
+    </HelmetProvider>
   )
 }
 

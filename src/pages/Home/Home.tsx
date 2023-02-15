@@ -9,7 +9,10 @@ import { ProductURL } from 'src/types/products.type'
 import AsideFilter from './AsideFilter/AsideFilter'
 import SortProducts from './SortProducts/SortProducts'
 import empty_box from '../../assets/empty-box.png'
+import { Helmet } from 'react-helmet-async'
+import { t } from 'i18next'
 export default function Home() {
+  const
   const queryConfig: ConfigURL = useQueryConfig()
   const { data: productsData } = useQuery({
     queryKey: ['products', queryConfig],
@@ -30,6 +33,10 @@ export default function Home() {
   if (!productsData) return null
   return (
     <div className='pt-[20px]'>
+      <Helmet>
+        <meta name='title' content='Đây là một dự án clone Shopee dùng cho mục đích học tập, và phi thương mại' />
+        <meta name='description' content='Đây là một dự án clone Shopee dùng cho mục đích học tập, và phi thương mại' />
+      </Helmet>
       {productsData.data.data.products.length > 0 ? (
         <div>
           <div className='grid  grid-cols-12 gap-8 container'>

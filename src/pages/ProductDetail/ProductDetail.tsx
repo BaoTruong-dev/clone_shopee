@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import classNames from 'classnames'
 import React, { useContext, useEffect, useRef, useState } from 'react'
+import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -130,6 +131,11 @@ export default function ProductDetail() {
   if (!product) return null
   return (
     <div className='pt-[40px]'>
+      <Helmet>
+        <title>{product.name}</title>
+        <meta name='title' content={product.name} />
+        <meta name='description' content={product.name} />
+      </Helmet>
       <div className='container'>
         <div className='grid grid-cols-12 gap-6 p-[20px] shadow-md'>
           <div className='col-span-5'>

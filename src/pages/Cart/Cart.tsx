@@ -2,6 +2,7 @@ import { useMutation } from '@tanstack/react-query'
 import produce from 'immer'
 import _ from 'lodash'
 import React, { useContext, useMemo, useRef } from 'react'
+import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -136,6 +137,11 @@ export default function Cart() {
   }
   return (
     <div>
+      <Helmet>
+        <title>Giỏ hàng | Clone Shopee</title>
+        <meta name='title' content='Đây là một dự án clone Shopee dùng cho mục đích học tập, và phi thương mại' />
+        <meta name='description' content='Đây là một dự án clone Shopee dùng cho mục đích học tập, và phi thương mại' />
+      </Helmet>
       <div className='container'>
         <div className='my-4 grid grid-cols-12 rounded-sm px-8 py-6 text-sm shadow-md'>
           <div className='col-span-5 flex items-center gap-4'>
