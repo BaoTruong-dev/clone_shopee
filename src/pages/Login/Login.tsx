@@ -50,7 +50,7 @@ export default function Login() {
   return (
     <div className='min-h-[482px] w-[400px] rounded bg-white  py-[30px] px-[20px] shadow shadow-slate-300'>
       <Helmet>
-        <title> {t('header.login')} | Clone Shopee</title>
+        <title>{t('header.login')} | Clone Shopee</title>
         <meta name='title' content='Đây là một dự án clone Shopee dùng cho mục đích học tập, và phi thương mại' />
         <meta name='description' content='Đây là một dự án clone Shopee dùng cho mục đích học tập, và phi thương mại' />
       </Helmet>

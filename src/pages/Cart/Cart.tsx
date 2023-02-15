@@ -138,7 +138,7 @@ export default function Cart() {
   return (
     <div>
       <Helmet>
-        <title>Giỏ hàng | Clone Shopee</title>
+        <title>Giỏ Hàng | Clone Shopee</title>
         <meta name='title' content='Đây là một dự án clone Shopee dùng cho mục đích học tập, và phi thương mại' />
         <meta name='description' content='Đây là một dự án clone Shopee dùng cho mục đích học tập, và phi thương mại' />
       </Helmet>

@@ -213,8 +213,15 @@ export default function Header() {
                     <p className='mb-[20px] px-[10px]  text-stone-400'>{t('header.cart-add-item')}</p>
                     <div>
                       {cartInfo.data.data.slice(0, 5).map((e) => {
+                        console.log(e)
+                        const link = `${e.product.name.replace(
+                          // eslint-disable-next-line no-useless-escape
+                          /\s|!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g,
+                          ''
+                        )}-i,${e.product._id}`
                         return (
-                          <div
+                          <Link
+                            to={link}
                             className='mt-4 flex gap-4 py-2 px-[10px] transition-[0.4s] hover:bg-stone-100'
                             key={e._id}
                           >
@@ -225,7 +232,7 @@ export default function Header() {
                             />
                             <p className='truncate capitalize'>{e.product.name}</p>
                             <p className='text-primary'>₫{new Intl.NumberFormat('de-DE').format(e.product.price)}</p>
-                          </div>
+                          </Link>
                         )
                       })}
                     </div>

@@ -6,7 +6,7 @@ export default function User() {
   return (
     <div className='mt-[20px]'>
       <Helmet>
-        <title>Thông tin cá nhân | Clone Shopee</title>
+        <title>Thông Tin Cá Nhân | Clone Shopee</title>
         <meta name='title' content='Đây là một dự án clone Shopee dùng cho mục đích học tập, và phi thương mại' />
         <meta name='description' content='Đây là một dự án clone Shopee dùng cho mục đích học tập, và phi thương mại' />
       </Helmet>

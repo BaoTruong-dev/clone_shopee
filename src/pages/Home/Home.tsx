@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import { Helmet } from 'react-helmet-async'
 import category from 'src/apis/category.api'
 import { productApi } from 'src/apis/product.api'
 import Paginate from 'src/components/Paginate/Paginate'
@@ -6,13 +7,10 @@ import ProductItem from 'src/components/ProductItem/ProductItem'
 import useQueryConfig, { ConfigURL } from 'src/hooks/useQueryConfig'
 import { Category } from 'src/types/category.type'
 import { ProductURL } from 'src/types/products.type'
+import empty_box from '../../assets/empty-box.png'
 import AsideFilter from './AsideFilter/AsideFilter'
 import SortProducts from './SortProducts/SortProducts'
-import empty_box from '../../assets/empty-box.png'
-import { Helmet } from 'react-helmet-async'
-import { t } from 'i18next'
 export default function Home() {
-  const
   const queryConfig: ConfigURL = useQueryConfig()
   const { data: productsData } = useQuery({
     queryKey: ['products', queryConfig],
@@ -34,6 +32,7 @@ export default function Home() {
   return (
     <div className='pt-[20px]'>
       <Helmet>
+        <title>Trang Chủ | Shopee Clone </title>
         <meta name='title' content='Đây là một dự án clone Shopee dùng cho mục đích học tập, và phi thương mại' />
         <meta name='description' content='Đây là một dự án clone Shopee dùng cho mục đích học tập, và phi thương mại' />
       </Helmet>
