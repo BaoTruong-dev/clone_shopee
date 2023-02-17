@@ -107,7 +107,7 @@ export default function Profile() {
         <p className='mt-[10px] text-sm text-gray-600'>{t('info-page.description')}</p>
       </div>
       <div className='mb-[40px] h-[1px] w-full bg-gray-100'></div>
-      <form className='flex gap-[50px]' onSubmit={handleSubmit(handleFormSubmit)}>
+      <form className='flex flex-col-reverse gap-[50px] lg:!flex-row' onSubmit={handleSubmit(handleFormSubmit)}>
         <div className='flex-1'>
           <div className='mb-[30px] flex gap-6'>
             <p className='w-[20%] text-right text-gray-500'>Email</p>
@@ -145,7 +145,7 @@ export default function Profile() {
             </div>
           </div>
         </div>
-        <div className='flex w-[30%] flex-col items-center border-l-[1px] border-stone-100 pl-[50px]'>
+        <div className='flex flex-col items-center border-l-[1px] border-stone-100 pl-[50px] lg:w-[30%]'>
           <div className='h-[100px] w-[100px] overflow-hidden rounded-full'>
             <img
               src={avatarFile.preview || getUrlAvatar(userInfo?.avatar)}

@@ -169,7 +169,7 @@ export default function Header() {
             </div>
           )}
         </div>
-        <div className='mt-[30px] flex items-center justify-between gap-8'>
+        <div className='mt-[30px] flex flex-col gap-8 md:flex-row md:items-center md:justify-between'>
           <Link to='/'>
             <svg viewBox='0 0 192 65' fill='white' className='h-[55px]'>
               <g>
@@ -207,7 +207,7 @@ export default function Header() {
           <Popover
             arrowLeft='97%'
             contentElement={
-              <div className='rouned-sm max-w-[400px] py-[10px]'>
+              <div className='max-w-[300px] rounded-sm py-[10px] sm:max-w-[400px]'>
                 {cartInfo && cartInfo.data.data.length > 0 ? (
                   <>
                     <p className='mb-[20px] px-[10px]  text-stone-400'>{t('header.cart-add-item')}</p>
@@ -265,7 +265,7 @@ export default function Header() {
             isOptionPlace
             origin='95%'
           >
-            <div className='relative'>
+            <div className='relative flex justify-end md:block'>
               <div className='absolute top-[-8px] right-[-10px] rounded-full bg-white px-2 text-xs text-primary shadow-sm'>
                 {cartInfo && cartInfo.data.data.length > 0 && cartInfo.data.data.length}
               </div>

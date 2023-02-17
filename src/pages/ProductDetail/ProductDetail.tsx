@@ -137,7 +137,7 @@ export default function ProductDetail() {
         <meta name='description' content={product.name} />
       </Helmet>
       <div className='container'>
-        <div className='grid grid-cols-12 gap-6 p-[20px] shadow-md'>
+        <div className='grid-cols-12 gap-6 p-[20px] shadow-md sm:grid'>
           <div className='col-span-5'>
             <div
               className='relative w-full cursor-zoom-in overflow-hidden  pb-[100%]'
@@ -194,20 +194,22 @@ export default function ProductDetail() {
               </button>
             </div>
           </div>
-          <div className='col-span-7'>
+          <div className='col-span-7 mt-6 sm:mt-0'>
             <h1 className='text-[20px] font-bold'>{product.name}</h1>
-            <div className='mt-[10px] flex'>
-              <div className='flex'>
-                <div className='mr-[10px] text-primary underline underline-offset-4'>{product.rating.toFixed(1)}</div>
-                <Star rating={product.rating} size='!h-4 !w-4' color='#ee4d2d' transparent={true} />
-                <div className='mx-4 h-[100%] w-[1px] bg-grey'></div>
+            <div className='mt-[10px]'>
+              <div className='flex flex-col gap-2 sm:flex-row sm:gap-0'>
+                <div className='flex'>
+                  <div className='mr-[10px] text-primary underline underline-offset-4'>{product.rating.toFixed(1)}</div>
+                  <Star rating={product.rating} size='!h-4 !w-4' color='#ee4d2d' transparent={true} />
+                </div>
+                <div className='mx-4 hidden h-[100%] w-[1px] bg-grey sm:block'></div>
                 <div>
                   <span className='underline underline-offset-4'>
                     {Intl.NumberFormat('en', { notation: 'compact' }).format(product.view).toLowerCase()}
                   </span>
                   <span className='ml-2 inline-block text-[14px] text-[#767676]'>{t('rating')}</span>
                 </div>
-                <div className='mx-4 h-[100%] w-[1px] bg-grey'></div>
+                <div className='mx-4 hidden h-[100%] w-[1px] bg-grey sm:block'></div>
                 <div>
                   <span>{Intl.NumberFormat('en', { notation: 'compact' }).format(product.sold).toLowerCase()}</span>
                   <span className='ml-2 inline-block  text-[#767676]'>{t('sold')}</span>
@@ -215,7 +217,7 @@ export default function ProductDetail() {
               </div>
             </div>
             <div className='mt-[10px] bg-[#fafafa] p-[15px]'>
-              <div className='relative flex items-center'>
+              <div className='relative flex flex-col items-center sm:flex-row'>
                 <div className='text-sm text-[#929292] line-through'>
                   ₫{new Intl.NumberFormat('de-DE').format(product.price_before_discount)}
                 </div>
@@ -227,7 +229,7 @@ export default function ProductDetail() {
                 </div>
               </div>
             </div>
-            <div className='h0fu mt-[30px] flex h-[32px] items-center'>
+            <div className=' mt-[30px] flex h-[32px] items-center'>
               <p className='mr-[40px] text-sm text-[#757575]'>{t('quantity')}</p>
               <QuantityController
                 quantity={quantity}
@@ -235,14 +237,21 @@ export default function ProductDetail() {
                 handleQuantity={handleQuantity}
                 handleOnType={handleQuantity}
               />
-              <div className='ml-[15px] flex gap-1 text-sm text-[#757575]'>
+              <div className='ml-[15px]  hidden gap-1 text-sm text-[#757575] sm:flex'>
                 <p>{product.quantity}</p>
                 <p>{t('available')}</p>
               </div>
             </div>
-            <div className='mt-[30px] flex items-center gap-4'>
-              <MainButton className='border border-primary bg-[#feebe5]' onClick={() => handleAddToCard(quantity, _id)}>
-                <div className='flex items-center text-[#ee4d2d]'>
+            <div className='mt-4 flex gap-1 text-sm text-[#757575] sm:hidden'>
+              <p>{product.quantity}</p>
+              <p>{t('available')}</p>
+            </div>
+            <div className='mt-[30px] flex flex-col gap-4 sm:flex-row sm:items-center'>
+              <MainButton
+                className='!w-full border border-primary bg-[#feebe5] sm:!w-max'
+                onClick={() => handleAddToCard(quantity, _id)}
+              >
+                <div className='flex items-center justify-center text-[#ee4d2d]'>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
                     fill='none'
@@ -260,7 +269,10 @@ export default function ProductDetail() {
                   <p>{t('add-to-cart')}</p>
                 </div>
               </MainButton>
-              <MainButton className='border border-primary' onClick={() => handleBuyNow(quantity, _id)}>
+              <MainButton
+                className='!w-full border border-primary sm:!w-max'
+                onClick={() => handleBuyNow(quantity, _id)}
+              >
                 {t('buy-now')}
               </MainButton>
             </div>
@@ -275,7 +287,7 @@ export default function ProductDetail() {
         </div>
         <div className='mt-[50px]'>
           <p className='mb-[20px] font-[500] text-[#808080]'>{t('also-like')}</p>
-          <div className='grid  grid-cols-5 gap-4'>
+          <div className='gap-4 sm:grid sm:grid-cols-3 xl:grid-cols-5'>
             {productsRelative &&
               productsRelative.data.data.products.map((e) => <ProductItem product={e} key={e._id} />)}
           </div>

@@ -10,9 +10,9 @@ export default function User() {
         <meta name='title' content='Đây là một dự án clone Shopee dùng cho mục đích học tập, và phi thương mại' />
         <meta name='description' content='Đây là một dự án clone Shopee dùng cho mục đích học tập, và phi thương mại' />
       </Helmet>
-      <div className='grid grid-cols-12 container'>
+      <div className='grid-cols-12 container lg:grid'>
         <Sidebar />
-        <div className='col-span-10 '>
+        <div className='col-span-10 mt-4 lg:mt-0'>
           <Outlet />
         </div>
       </div>

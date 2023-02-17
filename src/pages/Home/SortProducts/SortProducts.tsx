@@ -47,7 +47,7 @@ export default function SortProducts({ queryConfig, pageSize }: SortProps) {
   }
   return (
     <div className='flex flex-wrap items-center justify-between'>
-      <div className='flex items-center gap-[10px]'>
+      <div className='flex flex-wrap items-center gap-[10px]'>
         <p className='shrink-0'>{t('home-sort.sort-by')}</p>
         <MainButton
           onClick={() => handleSortValue('sort_by', 'createdAt', 'order')}
@@ -86,13 +86,13 @@ export default function SortProducts({ queryConfig, pageSize }: SortProps) {
           </option>
         </select>
       </div>
-      <div className='flex items-center'>
+      <div className=' flex items-center'>
         <div className='mr-6'>
           <span className='text-primary'>{page}</span>
           <span>/</span>
           <span>{pageSize}</span>
         </div>
-        <div className='flex items-center'>
+        <div className='mt-3 flex items-center md:mt-0'>
           <div
             className={classNames(
               'flex h-[40px] w-[40px] cursor-not-allowed  items-center justify-center border border-grey-light',

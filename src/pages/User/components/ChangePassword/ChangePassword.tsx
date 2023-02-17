@@ -49,35 +49,35 @@ export default function ChangePassword() {
       <div className='mb-[40px] h-[1px] w-full bg-gray-100'></div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className='flex-1'>
-          <div className='mb-[10px] flex items-center gap-6'>
-            <p className='mb-[24px] w-[15%] text-right text-gray-500'>{form('current-password')}</p>
+          <div className='mb-[10px] gap-6 md:flex md:items-center'>
+            <p className='mb-[24px] text-gray-500 md:w-[20%] md:text-right'>{form('current-password')}</p>
             <Input
-              className='!mb-0 w-[40%]'
+              className='!mb-0 w-full md:w-[60%]'
               type='password'
               {...register('password')}
               error={errors.password?.message}
             />
           </div>
-          <div className='mb-[10px] flex items-center gap-6'>
-            <p className='mb-[24px] w-[15%] text-right text-gray-500'>{form('new-password')}</p>
+          <div className='mb-[10px] gap-6 md:flex md:items-center'>
+            <p className='mb-[24px] text-left text-gray-500 md:w-[20%] md:text-right'>{form('new-password')}</p>
             <Input
-              className='!mb-0 w-[40%]'
+              className='!mb-0 w-full md:w-[60%]'
               type='password'
               {...register('new_password')}
               error={errors.new_password?.message}
             />
           </div>
-          <div className='mb-[10px] flex items-center gap-6'>
-            <p className='mb-[24px] w-[15%] text-right text-gray-500'>{form('confirm-password')}</p>
+          <div className='mb-[10px] gap-6 md:flex md:items-center'>
+            <p className='mb-[24px] text-gray-500 md:w-[20%] md:text-right'>{form('confirm-password')}</p>
             <Input
-              className='!mb-0 w-[40%]'
+              className='!mb-0 w-full md:w-[60%]'
               type='password'
               {...register('confirm_new_password')}
               error={errors.confirm_new_password?.message}
             />
           </div>
-          <div className='my-[30px] flex items-center gap-6'>
-            <p className='w-[15%]'></p>
+          <div className='my-[30px] gap-6 md:flex md:items-center'>
+            <p className='md:w-[20%]'></p>
             <div className='flex-grow'>
               <MainButton className={classNames({ 'bg-primary/70': _.values(errors).length > 0 })}>
                 {t('password-page.button')}

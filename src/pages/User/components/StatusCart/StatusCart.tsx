@@ -30,23 +30,25 @@ export default function StatusCart() {
 
   return (
     <div>
-      <div className='sticky top-0 mb-4 grid grid-cols-6 overflow-scroll rounded-sm shadow-md'>
-        {statusRouter.map((e, index) => {
-          return (
-            <Link
-              to={{
-                pathname: router.userStatusCart,
-                search: `status=${index}`
-              }}
-              key={e.name}
-              className={classNames('col-span-1 py-[20px] px-[10px] text-center', {
-                'border-b-[2px] border-primary text-primary': status ? index === Number(status) : index === 0
-              })}
-            >
-              {e.name}
-            </Link>
-          )
-        })}
+      <div className='overflow-x-auto'>
+        <div className='sticky top-0 mb-4 flex min-w-[1000px] rounded-sm shadow-md'>
+          {statusRouter.map((e, index) => {
+            return (
+              <Link
+                to={{
+                  pathname: router.userStatusCart,
+                  search: `status=${index}`
+                }}
+                key={e.name}
+                className={classNames('flex-1 shrink-0 py-[20px] px-[10px] text-center', {
+                  'border-b-[2px] border-primary text-primary': status ? index === Number(status) : index === 0
+                })}
+              >
+                {e.name}
+              </Link>
+            )
+          })}
+        </div>
       </div>
       {purchaseList && purchaseList.length > 0 ? (
         purchaseList.map((e) => {
@@ -67,9 +69,15 @@ export default function StatusCart() {
                   <div>
                     <p className=' mb-2 h-max text-[16px] line-clamp-1'>{e.product.name}</p>
                     <p>x{e.buy_count}</p>
+                    <div className='flex items-center gap-2 text-primary sm:hidden'>
+                      <p className='text-stone-500 line-through'>
+                        ₫{new Intl.NumberFormat('de-DE').format(e.price_before_discount)}
+                      </p>
+                      <p>₫{new Intl.NumberFormat('de-DE').format(e.price)}</p>
+                    </div>
                   </div>
                 </Link>
-                <div className='flex items-center gap-2 text-primary'>
+                <div className=' hidden items-center gap-2 text-primary sm:flex'>
                   <p className='text-stone-500 line-through'>
                     ₫{new Intl.NumberFormat('de-DE').format(e.price_before_discount)}
                   </p>

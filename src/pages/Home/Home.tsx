@@ -30,32 +30,30 @@ export default function Home() {
   })
   if (!productsData) return null
   return (
-    <div className='pt-[20px]'>
+    <div className='!pt-[20px] container'>
       <Helmet>
         <title>Trang Chủ | Shopee Clone </title>
         <meta name='title' content='Đây là một dự án clone Shopee dùng cho mục đích học tập, và phi thương mại' />
         <meta name='description' content='Đây là một dự án clone Shopee dùng cho mục đích học tập, và phi thương mại' />
       </Helmet>
       {productsData.data.data.products.length > 0 ? (
-        <div>
-          <div className='grid  grid-cols-12 gap-8 container'>
-            <div className='col-span-3'>
-              <AsideFilter queryConfig={queryConfig} categories={categoryData?.data.data as Category[]} />
+        <div className='gap-8 sm:grid lg:grid-cols-12 '>
+          <div className='lg:col-span-3'>
+            <AsideFilter queryConfig={queryConfig} categories={categoryData?.data.data as Category[]} />
+          </div>
+          <div className='lg:col-span-9'>
+            <div className='bg-grey py-[10px] px-[20px] text-sm'>
+              <SortProducts
+                queryConfig={queryConfig}
+                pageSize={productsData?.data.data?.pagination.page_size as number}
+              />
             </div>
-            <div className='col-span-9'>
-              <div className='bg-grey py-[10px] px-[20px] text-sm'>
-                <SortProducts
-                  queryConfig={queryConfig}
-                  pageSize={productsData?.data.data?.pagination.page_size as number}
-                />
-              </div>
-              <div className='mt-[10px]  grid grid-cols-4 gap-4 p-[5px]'>
-                {productsData?.data?.data?.products.map((product) => {
-                  return <ProductItem key={product._id} product={product} />
-                })}
-              </div>
-              <Paginate queryConfig={queryConfig} pageSize={productsData.data.data.pagination.page_size as number} />
+            <div className='mt-[10px] grid gap-4 p-[5px] sm:grid-cols-2 lg:grid-cols-4'>
+              {productsData?.data?.data?.products.map((product) => {
+                return <ProductItem key={product._id} product={product} />
+              })}
             </div>
+            <Paginate queryConfig={queryConfig} pageSize={productsData.data.data.pagination.page_size as number} />
           </div>
         </div>
       ) : (
