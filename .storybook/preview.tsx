@@ -33,13 +33,11 @@ export const decorators = [
     return (
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <PurchasesProvider>
-            <ErrorBoundary>
-              <HelmetProvider>
-                <Story />
-              </HelmetProvider>
-            </ErrorBoundary>
-          </PurchasesProvider>
+          <ErrorBoundary>
+            <HelmetProvider>
+              <Story />
+            </HelmetProvider>
+          </ErrorBoundary>
         </AuthProvider>
       </QueryClientProvider>
     )
