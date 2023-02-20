@@ -17,6 +17,6 @@
     "jsx": "react-jsx",
     "baseUrl": "."
   },
-  "include": ["src", "HeaderAuth"],
+  "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
