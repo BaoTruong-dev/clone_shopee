@@ -32,7 +32,7 @@ export default function Home() {
   return (
     <div className='!pt-[20px] container'>
       <Helmet>
-        <title>Trang Chủ | Shopee Clone </title>
+        <title>Trang Chủ | Shopee Clone</title>
         <meta name='title' content='Đây là một dự án clone Shopee dùng cho mục đích học tập, và phi thương mại' />
         <meta name='description' content='Đây là một dự án clone Shopee dùng cho mục đích học tập, và phi thương mại' />
       </Helmet>
