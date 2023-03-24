@@ -6,8 +6,8 @@ export default function Footer() {
     <div className='flex flex-auto py-[20px] text-sm'>
       <div className='container'>
         <div className='mt-[20px] flex flex-col justify-between border-t-[1px] border-slate-200 pt-[40px] lg:flex-row'>
-          <div>© 2023 Shopee. {t('footer.rights')}</div>
-          <div className='flex flex-wrap items-center'>
+          <div className='text-center sm:text-left'>© 2023 Shopee. {t('footer.rights')}</div>
+          <div className='flex flex-wrap items-center justify-center sm:justify-start'>
             <p className='mr-[5px]'>{t('footer.location')}:</p>
             <p className='mr-[5px] border-r-[1px] border-slate-200 pr-[5px]'>Singapore</p>
             <p className='mr-[5px] border-r-[1px] border-slate-200 pr-[5px]'>Indonesia</p>

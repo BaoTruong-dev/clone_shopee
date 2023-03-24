@@ -255,7 +255,7 @@ export default function Header() {
                     </div>
                   </>
                 ) : (
-                  <div className='flex h-[200px] w-[400px] flex-col items-center justify-center'>
+                  <div className='flex h-[200px] w-[300px] w-[400px] flex-col items-center justify-center'>
                     <img src={empty_cart} alt='empty_cart' width={100} />
                     <p className='mt-[20px] text-stone-400'>{t('header.cart-empty')}</p>
                   </div>
