@@ -22,7 +22,7 @@ export default function Sidebar() {
         <img
           src={getUrlAvatar(userInfo?.avatar)}
           alt='avatar'
-          className='border-x-gray-300object-cover h-14 w-14 shrink-0 overflow-hidden rounded-full border'
+          className='h-14 w-14 shrink-0 overflow-hidden rounded-full border border-x-gray-300 object-cover'
           onClick={() => navigate(router.user)}
           // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
           role='button'
